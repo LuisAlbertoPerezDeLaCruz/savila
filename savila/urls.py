@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import include, path, re_path
 from beergame import views as beergame_views
 from accounts import views as accounts_views
@@ -24,7 +25,7 @@ urlpatterns = [
 
     # local apps urls
     path('beergame', include('beergame.urls')),
-
+    path('', lambda request: redirect('/beergame/home', permanent=False)),
     #
     # auth urls
     #
