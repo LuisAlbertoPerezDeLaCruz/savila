@@ -8,4 +8,33 @@
 <div class="mb-4">
     <a href="{% url 'new_game' %}" class="btn btn-primary">New game</a>
 </div>
+<table class="table">
+    <thead class="thead-inverse">
+        <tr>
+            <th>Game</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Players</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for game in games %}
+        <tr>
+            <td>
+                <a href="#">{{ game.name }}</a>
+            </td>
+            <td class="align-middle">{{ game.get_status_display }}</td>
+
+            <td class="align-middle">
+                <small>
+                    <a href="#">
+                        By {{ game.created_by.username }} at {{ game.created_at }}
+                    </a>
+                </small>
+            </td>
+            <td class="align-middle"></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
