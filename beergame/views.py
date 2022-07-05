@@ -1,3 +1,4 @@
+from ast import Try
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Game, GamePlayer
 from .forms import NewGameForm
@@ -26,3 +27,17 @@ def new_game(request):
     else:
         form = NewGameForm()
     return render(request, 'new_game.html', {'game': game, 'form': form})
+
+
+@login_required
+def joinin_game(request, pk):
+    game = Game.objects.get(pk=pk)
+    try:
+        GamePlayer.objects.create(
+            game=game,
+            player=request.user
+        )
+    except:
+        pass
+    games = Game.objects.all()
+    return render(request, 'home.html', {"games": games})

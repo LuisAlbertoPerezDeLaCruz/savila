@@ -34,6 +34,11 @@
             </td>
             <td class="align-middle">
                 {{ game.playerslist}}
+                <span>
+                    <a href="{% url 'joinin_game' game.pk %}" style="padding-left: 1em">
+                        [join in]
+                    </a>
+                </span>
             </td>
         </tr>
         {% endfor %}

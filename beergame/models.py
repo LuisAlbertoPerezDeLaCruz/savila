@@ -38,5 +38,8 @@ class GamePlayer(models.Model):
     joined_at = models.DateTimeField(auto_now_add=True)
     last_play_at = models.DateTimeField(null=True)
 
+    class Meta:
+        unique_together = ('game', 'player',)
+
     def __str__(self):
         return f'{self.player.username}, {self.game.name}'
