@@ -1,12 +1,11 @@
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Game
+from .models import Game, GamePlayer
 from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
 
 
 def home(request):
     games = Game.objects.all()
-    print(games)
     return render(request, 'home.html', {"games": games})
 
 
@@ -19,6 +18,10 @@ def new_game(request):
             game = form.save(commit=False)
             game.created_by = request.user
             game.save()
+            GamePlayer.objects.create(
+                game=game,
+                player=request.user
+            )
             return redirect('home')
     else:
         form = NewGameForm()

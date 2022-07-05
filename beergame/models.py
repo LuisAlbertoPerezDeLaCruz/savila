@@ -19,5 +19,24 @@ class Game(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __players__(self):
+        players_ = self.players
+        players_str = ''
+        for _ in players_:
+            players_str += _.username
+        return players_str
+
     def __str__(self):
         return self.name
+
+
+class GamePlayer(models.Model):
+    game = models.ForeignKey(
+        Game, null=True, related_name='players', on_delete=models.CASCADE)
+    player = models.ForeignKey(
+        User, null=True, related_name='players', on_delete=models.CASCADE)
+    joined_at = models.DateTimeField(auto_now_add=True)
+    last_play_at = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return f'{self.player.username}, {self.game.name}'
