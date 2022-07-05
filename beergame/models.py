@@ -19,11 +19,11 @@ class Game(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __players__(self):
-        players_ = self.players
+    def playerslist(self):
+        rels = self.players.all()
         players_str = ''
-        for _ in players_:
-            players_str += _.username
+        for rel in rels:
+            players_str += f'{rel.player.username} '
         return players_str
 
     def __str__(self):
