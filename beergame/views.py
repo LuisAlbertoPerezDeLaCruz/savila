@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Game, GamePlayer
 from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages  # import messages
 
 
 def home(request):
@@ -37,7 +38,11 @@ def joinin_game(request, pk):
             game=game,
             player=request.user
         )
+        messages.success(
+            request, f'{request.user} is now playing in {game.name}!')
     except:
+        messages.warning(
+            request, f'{request.user} is already playing in {game.name}!')
         pass
     games = Game.objects.all()
     return render(request, 'home.html', {"games": games})
