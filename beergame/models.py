@@ -43,3 +43,10 @@ class GamePlayer(models.Model):
 
     def __str__(self):
         return f'{self.player.username}, {self.game.name}'
+
+
+class TokenForRefresh(models.Model):
+    token = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.token
