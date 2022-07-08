@@ -68,6 +68,25 @@
   <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
   <script src="{% static 'js/popper.min.js' %}"></script>
   <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script>
+    let i = 0;
+
+    setInterval(() => {
+      $.ajax({
+        url: '{% url "get_token_for_refresh" %}',
+        dataType: 'json',
+        success: function (data) {
+          const storedTokenForRefresh = window.localStorage.getItem('storedTokenForRefresh');
+          if (data.token != storedTokenForRefresh) {
+            window.localStorage.setItem('storedTokenForRefresh', data.token);
+            window.location.reload();
+          };
+        }
+      });
+    }, 5000);
+
+
+  </script>
   {% block javascript %}{% endblock %}
 </body>
 

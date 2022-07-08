@@ -1,6 +1,7 @@
 from ast import Try
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Game, GamePlayer
+from .models import Game, GamePlayer, TokenForRefresh
 from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
@@ -46,3 +47,10 @@ def joinin_game(request, pk):
         pass
     games = Game.objects.all()
     return render(request, 'home.html', {"games": games})
+
+
+def get_token_for_refresh(request):
+    data = dict()
+    obj = TokenForRefresh.objects.first()
+    data['token'] = obj.token
+    return JsonResponse(data)

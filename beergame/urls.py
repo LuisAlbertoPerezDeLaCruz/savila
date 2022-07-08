@@ -6,4 +6,6 @@ urlpatterns = [
     path('/home', beergame_views.home, name='home'),
     path('/new_game', beergame_views.new_game, name='new_game'),
     path('/joinin_game/<int:pk>/', beergame_views.joinin_game, name='joinin_game'),
+    path('ajax/get_token_for_refresh/',
+         beergame_views.get_token_for_refresh, name='get_token_for_refresh'),
 ]
