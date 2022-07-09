@@ -32,6 +32,14 @@ def new_game(request):
 
 
 @login_required
+def game(request, pk):
+    game = Game.objects.get(pk=pk)
+    players = GamePlayer.objects.filter(game=pk).order_by('joined_at')
+    players_list = [x.player.username for x in players]
+    return render(request, 'game.html', {"game": game, "players": players, "players_list": players_list})
+
+
+@login_required
 def joinin_game(request, pk):
     game = Game.objects.get(pk=pk)
     try:

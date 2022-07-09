@@ -21,7 +21,7 @@
         {% for game in games %}
         <tr>
             <td>
-                <a href="#">{{ game.name }}</a>
+                <a href="{% url 'game' game.pk %}">{{ game.name }}</a>
             </td>
             <td class="align-middle">{{ game.get_status_display }}</td>
 

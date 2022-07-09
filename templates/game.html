@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+<li class="breadcrumb-item active">{{game.name}}</li>
+{% endblock %}
+
+{% block content %}
+<h6>Players:
+    {% for player in players_list %}
+    ({{ forloop.counter }}) {{player}} &nbsp;
+    {% endfor %}
+</h6>
+{% endblock %}
