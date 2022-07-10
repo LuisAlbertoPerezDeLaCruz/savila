@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # local apps urls
-    path('beergame', include('beergame.urls')),
+    path('beergame/', include('beergame.urls')),
     path('', lambda request: redirect('/beergame/home', permanent=False)),
     #
     # auth urls
