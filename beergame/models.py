@@ -26,9 +26,9 @@ class Game(models.Model):
     last_play_at = models.DateTimeField(null=True)
 
     last_play_by = models.ForeignKey(
-        User, related_name='last_plays', null=True, on_delete=models.CASCADE)
+        User, related_name='last_plays', null=True, blank=True, on_delete=models.CASCADE)
     next_play_by = models.ForeignKey(
-        User, related_name='next_plays', null=True, on_delete=models.CASCADE)
+        User, related_name='next_plays', null=True, blank=True, on_delete=models.CASCADE)
 
     turns_played = models.IntegerField(default=0)
 
@@ -75,44 +75,10 @@ class GameTurn(models.Model):
         return json.loads(self.turn_result)
 
     def save(self,  *args, **kwargs):
-        self.game_player.last_play_at = datetime.now()
-
-        # Si el objecto self no esta creado, entonces el pk en nulo,
-        # lo cual quiere decir que estoy creando el objeto y
-        # no actualizandolo
-
-        if self.pk is None:
-            self.turn += 1
-            # A traves del la relacion game_player modifico el objeto game
-            # adicionandole loa valores: last_play_at, last_play_by, next_play_by
-            # y turns_played
-
-            self.game_player.game.last_play_at = datetime.now()
-            self.game_player.game.turns_played = self.turn
-            self.game_player.game.last_play_by = self.game_player.player
-
-            _ = self.game_player.game.playerslist().strip().split()
-            curr_idx = _.index(self.game_player.player.username)
-            next_idx_ = curr_idx + 1
-
-            if next_idx_ > len(_)-1:
-                next_idx = 0
-            else:
-                next_idx = next_idx_
-
-            next_player = User.objects.get(username=_[next_idx])
-
-            self.game_player.game.next_play_by = next_player
-            self.game_player.game.save()
-        else:
-            # Automaticamente calculo los turns_played, buscando los turns que
-            # pertenecen al mismo game
+        if self.pk == None:
             turns_played = self.__class__.objects.filter(
                 game_player__game=self.game_player.game).count()
-            self.game_player.game.turns_played = turns_played
-            self.game_player.game.save()
-
-        self.game_player.save()
+            self.turn = turns_played + 1
         super().save(*args,  **kwargs)
 
     def __str__(self):
