@@ -1,6 +1,6 @@
 # savila/signals.py
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 
 from accounts.models import User
@@ -54,19 +54,14 @@ def post_save_game_turn(sender, instance, created, **kwargs):
         instance.game_player.game.next_play_by = next_player
         instance.game_player.game.save()
     else:
-        # Automaticamente calculo los turns_played, buscando los turns que
-        # pertenecen al mismo game
-        turns_played = instance.__class__.objects.filter(
-            game_player__game=instance.game_player.game).count()
-        instance.game_player.game.turns_played = turns_played
-        instance.game_player.game.save()
+        pass
 
     instance.game_player.save()
 
 
-@receiver(post_delete, sender=GameTurn)
-def delete_game_turn(sender, **kwargs):
+@receiver(pre_delete, sender=GameTurn)
+def pre_delete_game_turn(sender, instance, **kwargs):
     last_instance = GameTurn.objects.last()
-    if last_instance:
-        last_instance.save()
+    if instance != last_instance:
+        raise Exception("Can only delete last instance")
     return
