@@ -27,11 +27,29 @@ def post_save_game_turn(sender, instance, created, **kwargs):
 
     instance.game_player.last_play_at = datetime.now()
 
-    # Si el objecto instance no esta creado, entonces el pk en nulo,
-    # lo cual quiere decir que estoy creando el objeto y
-    # no actualizandolo
+    gameExtraInfoUpdate(created, instance)
 
-    if created:
+    instance.game_player.save()
+
+
+@receiver(pre_delete, sender=GameTurn)
+def pre_delete_game_turn(sender, instance, **kwargs):
+    last_instance = GameTurn.objects.last()
+    if instance != last_instance:
+        raise Exception("Can only delete last instance")
+    return
+
+
+@receiver(post_delete, sender=GameTurn)
+def post_delete_game_turn(sender, instance, **kwargs):
+    last_instance = GameTurn.objects.last()
+    gameExtraInfoUpdate(True, last_instance)
+    return
+
+
+def gameExtraInfoUpdate(go_ahead, instance):
+
+    if go_ahead:
         # A traves del la relacion game_player modifico el objeto game
         # adicionandole loa valores: last_play_at, last_play_by, next_play_by
         # y turns_played
@@ -55,13 +73,3 @@ def post_save_game_turn(sender, instance, created, **kwargs):
         instance.game_player.game.save()
     else:
         pass
-
-    instance.game_player.save()
-
-
-@receiver(pre_delete, sender=GameTurn)
-def pre_delete_game_turn(sender, instance, **kwargs):
-    last_instance = GameTurn.objects.last()
-    if instance != last_instance:
-        raise Exception("Can only delete last instance")
-    return
