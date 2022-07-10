@@ -1,4 +1,3 @@
-from ast import Try
 import random
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -36,8 +35,10 @@ def new_game(request):
 def game(request, pk):
     game = Game.objects.get(pk=pk)
     if request.method == 'POST':
-        game_player = GamePlayer.objects.get(game=game, player=request.user)
+        game_player = GamePlayer.objects.get(
+            game=game, player=request.user)
         createGameTurnObject(request, game_player)
+
     players = GamePlayer.objects.filter(game=pk).order_by('joined_at')
     players_list = [x.player.username for x in players]
     game_turns = GameTurn.objects.filter(game_player__game=pk).order_by('turn')
