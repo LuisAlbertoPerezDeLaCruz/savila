@@ -1,7 +1,7 @@
 from ast import Try
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Game, GamePlayer, TokenForRefresh
+from .models import Game, GamePlayer, GameTurn, TokenForRefresh
 from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
@@ -33,10 +33,17 @@ def new_game(request):
 
 @login_required
 def game(request, pk):
+    if request.method == 'POST':
+        played_value = float(request.POST.get('played_value'))
+        pass
     game = Game.objects.get(pk=pk)
     players = GamePlayer.objects.filter(game=pk).order_by('joined_at')
     players_list = [x.player.username for x in players]
-    return render(request, 'game.html', {"game": game, "players": players, "players_list": players_list})
+    game_turns = GameTurn.objects.filter(game_player__game=pk).order_by('turn')
+    return render(request, 'game.html', {"game": game,
+                                         "players": players,
+                                         "players_list": players_list,
+                                         "game_turns": game_turns})
 
 
 @login_required

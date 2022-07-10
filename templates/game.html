@@ -11,4 +11,55 @@
     ({{ forloop.counter }}) {{player}} &nbsp;
     {% endfor %}
 </h6>
+<div>
+    {% if game.next_play_by.username == request.user.username %}
+    <h6>
+        <form class="row g-2" method="post">
+            {% csrf_token %}
+            <div class="col-auto" style="padding-top: 0.5em;">
+                <label for="played_value">Your turn:</label>
+                <input type="decimal" class="form-control-decimal" name="played_value">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary mb-1">Send</button>
+            </div>
+        </form>
+    </h6>
+    {% else %}
+    <h6>
+        Now playing: {{game.next_play_by.username}}
+    </h6>
+    {% endif %}
+</div>
+<table class="table">
+    <thead class="thead-inverse">
+        <tr>
+            <th>turn</th>
+            <th>by</th>
+            <th>value</th>
+            <th>result</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for game_turn in game_turns %}
+        <tr>
+            <td>
+                {{ game_turn.turn }}</a>
+            </td>
+            <td class="align-middle">{{ game_turn.game_player.player.username }}</td>
+
+            <td class="align-middle">
+                {{ game_turn.value_played}}
+            </td>
+
+            <td class="align-middle">
+                <small>
+                    {{ game_turn.turn_result }}
+                </small>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
