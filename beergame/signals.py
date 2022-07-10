@@ -36,7 +36,8 @@ def post_save_game_turn(sender, instance, created, **kwargs):
 def pre_delete_game_turn(sender, instance, **kwargs):
     last_instance = GameTurn.objects.last()
     if instance != last_instance:
-        raise Exception("Can only delete last instance")
+        pass
+        # raise Exception("Can only delete last instance")
     return
 
 

@@ -1,4 +1,5 @@
 from ast import Try
+import random
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Game, GamePlayer, GameTurn, TokenForRefresh
@@ -33,10 +34,10 @@ def new_game(request):
 
 @login_required
 def game(request, pk):
-    if request.method == 'POST':
-        played_value = float(request.POST.get('played_value'))
-        pass
     game = Game.objects.get(pk=pk)
+    if request.method == 'POST':
+        game_player = GamePlayer.objects.get(game=game, player=request.user)
+        createGameTurnObject(request, game_player)
     players = GamePlayer.objects.filter(game=pk).order_by('joined_at')
     players_list = [x.player.username for x in players]
     game_turns = GameTurn.objects.filter(game_player__game=pk).order_by('turn')
@@ -69,3 +70,22 @@ def get_token_for_refresh(request):
     obj = TokenForRefresh.objects.first()
     data['token'] = obj.token
     return JsonResponse(data)
+
+
+def createGameTurnObject(request, game_player):
+    value_played = float(request.POST.get('played_value'))
+    game_turn = GameTurn.objects.create(
+        game_player=game_player,
+        value_played=value_played,
+        turn_result=gameTurnResult())
+
+
+def gameTurnResult():
+    result = list()
+    for i in range(4):
+        internal = list()
+        for j in range(3):
+            n = random.randint(0, 100)
+            internal.append(n)
+        result.append(internal)
+    return result
