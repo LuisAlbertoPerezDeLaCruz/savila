@@ -37,7 +37,8 @@ def game(request, pk):
     if request.method == 'POST':
         game_player = GamePlayer.objects.get(
             game=game, player=request.user)
-        createGameTurnObject(request, game_player)
+        game_turn = createGameTurnObject(request, game_player)
+        game = game_turn.game_player.game
 
     players = GamePlayer.objects.filter(game=pk).order_by('joined_at')
     players_list = [x.player.username for x in players]
@@ -74,8 +75,8 @@ def get_token_for_refresh(request):
 
 
 def createGameTurnObject(request, game_player):
-    value_played = float(request.POST.get('played_value'))
-    game_turn = GameTurn.objects.create(
+    value_played = float(request.POST.get('played_value', 0))
+    return GameTurn.objects.create(
         game_player=game_player,
         value_played=value_played,
         turn_result=gameTurnResult())
