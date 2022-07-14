@@ -71,17 +71,18 @@ class GameTurn(models.Model):
 
     game_player = models.ForeignKey(
         GamePlayer, null=True, related_name='gameplayers', on_delete=models.CASCADE)
+
     value_played = models.DecimalField(
         decimal_places=2, default=0, max_digits=12,
     )
 
-    turn_result = models.CharField(max_length=500)
+    round_result = models.CharField(max_length=500)
 
-    def set_turn_result(self, value):
-        self.turn_result = json.dumps(value)
+    def set_round_result(self, value):
+        self.round_result = json.dumps(value)
 
-    def get_turn_result(self):
-        return json.loads(self.turn_result)
+    def get_round_result(self):
+        return json.loads(self.round_result)
 
     def save(self,  *args, **kwargs):
         if self.pk == None:  # new record
@@ -98,7 +99,7 @@ class GameTurn(models.Model):
         return _
 
     def __str__(self):
-        return f'{self.turn},{self.game_player.player.username}, {self.value_played}, {self.turn_result}'
+        return f'{self.turn},{self.game_player.player.username}, {self.value_played}, {self.round_result}'
 
 
 class TokenForRefresh(models.Model):
