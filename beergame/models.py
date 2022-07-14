@@ -41,7 +41,8 @@ class Game(models.Model):
         return players_str
 
     def save(self,  *args, **kwargs):
-        self.next_play_by = self.created_by
+        if self.pk == 0:
+            self.next_play_by = self.created_by
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -90,7 +91,7 @@ class GameTurn(models.Model):
         self.round = self.calc_round(self.turn)
         super().save(*args,  **kwargs)
 
-    def calc_round(value):
+    def calc_round(self, value):
         _ = value // 4
         if value % 4 > 0 or _ == 0:
             _ += 1
