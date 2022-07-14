@@ -94,10 +94,19 @@ def get_token_for_refresh(request):
 
 def createGameTurnObject(request, game_player):
     value_played = float(request.POST.get('played_value', 0))
-    return GameTurn.objects.create(
+
+    game_turn = GameTurn.objects.create(
         game_player=game_player,
         value_played=value_played,
-        turn_result=gameTurnResult())
+        round_result='')
+
+    n = GameTurn.objects.filter(game_player__game=game_player.game).count()
+
+    if n % 4 == 0 and n > 0:
+        game_turn.round_result = gameTurnResult()
+        game_turn.save()
+
+    return game_turn
 
 
 def gameTurnResult():

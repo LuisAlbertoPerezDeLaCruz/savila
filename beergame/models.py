@@ -41,7 +41,7 @@ class Game(models.Model):
         return players_str
 
     def save(self,  *args, **kwargs):
-        if self.pk == 0:
+        if self.pk == None:
             self.next_play_by = self.created_by
         super().save(*args, **kwargs)
 

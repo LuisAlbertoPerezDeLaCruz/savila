@@ -27,6 +27,9 @@
         </form>
     </h6>
     {% endif %}
+    {% endif %}
+
+    {% if game.created_by.username == request.user.username %}
     {% if game.status == 'C' %}
 
     <div class="mb-4">
@@ -34,14 +37,14 @@
     </div>
 
     {% endif %}
+    {% endif %}
 
-    {% else %}
     {% if game.status == 'S' %}
     <h6>
         Now playing: {{game.next_play_by.username}}
     </h6>
     {% endif %}
-    {% endif %}
+
 </div>
 <table class="table">
     <thead class="thead-inverse">
@@ -66,7 +69,7 @@
 
             <td class="align-middle">
                 <small>
-                    {{ game_turn.turn_result }}
+                    {{ game_turn.round_result }}
                 </small>
             </td>
         </tr>
