@@ -46,7 +46,7 @@
 <table class="table">
     <thead class="thead-inverse">
         <tr>
-            <th>turn</th>
+            <th>round</th>
             <th>by</th>
             <th>value</th>
             <th>result</th>
@@ -56,7 +56,7 @@
         {% for game_turn in game_turns %}
         <tr>
             <td>
-                {{ game_turn.turn }}</a>
+                {{ game_turn.round }}</a>
             </td>
             <td class="align-middle">{{ game_turn.game_player.player.username }}</td>
 

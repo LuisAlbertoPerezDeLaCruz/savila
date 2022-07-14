@@ -65,6 +65,9 @@ class GamePlayer(models.Model):
 
 class GameTurn(models.Model):
     turn = models.IntegerField(default=0,)
+
+    round = models.IntegerField(default=0,)
+
     game_player = models.ForeignKey(
         GamePlayer, null=True, related_name='gameplayers', on_delete=models.CASCADE)
     value_played = models.DecimalField(
@@ -84,7 +87,14 @@ class GameTurn(models.Model):
             turns_played = self.__class__.objects.filter(
                 game_player__game=self.game_player.game).count()
             self.turn = turns_played + 1
+        self.round = self.calc_round(self.turn)
         super().save(*args,  **kwargs)
+
+    def calc_round(value):
+        _ = value // 4
+        if value % 4 > 0 or _ == 0:
+            _ += 1
+        return _
 
     def __str__(self):
         return f'{self.turn},{self.game_player.player.username}, {self.value_played}, {self.turn_result}'
