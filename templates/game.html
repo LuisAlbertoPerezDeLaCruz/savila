@@ -30,7 +30,7 @@
     {% if game.status == 'C' %}
 
     <div class="mb-4">
-        <a href="#" class="btn btn-primary">Start game</a>
+        <a href="{% url 'start_game' game.pk %}" class="btn btn-primary">Start game</a>
     </div>
 
     {% endif %}

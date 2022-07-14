@@ -72,7 +72,6 @@ def joinin_game(request, pk):
         pass
     games = Game.objects.all()
     return redirect('home')
-    return render(request, 'home.html', {"games": games})
 
 
 def get_token_for_refresh(request):
@@ -99,3 +98,12 @@ def gameTurnResult():
             internal.append(n)
         result.append(internal)
     return result
+
+
+def start_game(request, pk):
+    game = Game.objects.get(pk=pk)
+    game.status = 'S'
+    game.save()
+    messages.success(
+        request, f'{game.name} started!')
+    return redirect(f'game/{game.pk}')

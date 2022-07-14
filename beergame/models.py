@@ -27,6 +27,7 @@ class Game(models.Model):
 
     last_play_by = models.ForeignKey(
         User, related_name='last_plays', null=True, blank=True, on_delete=models.CASCADE)
+
     next_play_by = models.ForeignKey(
         User, related_name='next_plays', null=True, blank=True, on_delete=models.CASCADE)
 
