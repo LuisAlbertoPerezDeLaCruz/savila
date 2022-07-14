@@ -36,7 +36,7 @@ class Game(models.Model):
     def playerslist(self):
         rels = self.players.all()
         players_str = ''
-        for rel in rels:
+        for idx, rel in enumerate(rels):
             players_str += f'{rel.player.username} '
         return players_str
 

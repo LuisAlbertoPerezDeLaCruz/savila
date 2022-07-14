@@ -48,12 +48,23 @@ def game(request, pk):
         game = game_turn.game_player.game
 
     players = GamePlayer.objects.filter(game=pk).order_by('joined_at')
-    players_list = [x.player.username for x in players]
+    players_list = [
+        f'({pos_description(idx)}) {x.player.username}' for idx, x in enumerate(players)]
     game_turns = GameTurn.objects.filter(game_player__game=pk).order_by('turn')
     return render(request, 'game.html', {"game": game,
                                          "players": players,
                                          "players_list": players_list,
                                          "game_turns": game_turns})
+
+
+def pos_description(pos):
+    descriptions = (
+        "retailer",
+        "wholesaler",
+        "distributor",
+        "manufacturer"
+    )
+    return descriptions[pos]
 
 
 @login_required
