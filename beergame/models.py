@@ -75,7 +75,7 @@ class GameTurn(models.Model):
         return json.loads(self.turn_result)
 
     def save(self,  *args, **kwargs):
-        if self.pk == None:
+        if self.pk == None:  # new record
             turns_played = self.__class__.objects.filter(
                 game_player__game=self.game_player.game).count()
             self.turn = turns_played + 1

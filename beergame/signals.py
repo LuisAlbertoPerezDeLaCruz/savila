@@ -50,27 +50,30 @@ def post_delete_game_turn(sender, instance, **kwargs):
 
 def gameExtraInfoUpdate(go_ahead, instance):
 
-    if go_ahead:
-        # A traves del la relacion game_player modifico el objeto game
-        # adicionandole loa valores: last_play_at, last_play_by, next_play_by
-        # y turns_played
+    try:
+        if go_ahead:
+            # A traves del la relacion game_player modifico el objeto game
+            # adicionandole loa valores: last_play_at, last_play_by, next_play_by
+            # y turns_played
 
-        instance.game_player.game.last_play_at = datetime.now()
-        instance.game_player.game.turns_played = instance.turn
-        instance.game_player.game.last_play_by = instance.game_player.player
+            instance.game_player.game.last_play_at = datetime.now()
+            instance.game_player.game.turns_played = instance.turn
+            instance.game_player.game.last_play_by = instance.game_player.player
 
-        _ = instance.game_player.game.playerslist().strip().split()
-        curr_idx = _.index(instance.game_player.player.username)
-        next_idx_ = curr_idx + 1
+            _ = instance.game_player.game.playerslist().strip().split()
+            curr_idx = _.index(instance.game_player.player.username)
+            next_idx_ = curr_idx + 1
 
-        if next_idx_ > len(_)-1:
-            next_idx = 0
+            if next_idx_ > len(_)-1:
+                next_idx = 0
+            else:
+                next_idx = next_idx_
+
+            next_player = User.objects.get(username=_[next_idx])
+
+            instance.game_player.game.next_play_by = next_player
+            instance.game_player.game.save()
         else:
-            next_idx = next_idx_
-
-        next_player = User.objects.get(username=_[next_idx])
-
-        instance.game_player.game.next_play_by = next_player
-        instance.game_player.game.save()
-    else:
+            pass
+    except Exception as ex:
         pass
