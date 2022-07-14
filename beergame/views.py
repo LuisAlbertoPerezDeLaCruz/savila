@@ -106,4 +106,4 @@ def start_game(request, pk):
     game.save()
     messages.success(
         request, f'{game.name} started!')
-    return redirect(f'game/{game.pk}')
+    return redirect(f'/beergame/game/{game.pk}')
