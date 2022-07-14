@@ -5,11 +5,18 @@ from .models import Game, GamePlayer, GameTurn, TokenForRefresh
 from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
+from django.db.models import Q
 
 
 def home(request):
     games = Game.objects.all()
-    return render(request, 'home.html', {"games": games})
+    user_has_active_games = False
+    try:
+        user_has_active_games = GamePlayer.objects.filter(
+            Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
+    except Exception as ex:
+        pass
+    return render(request, 'home.html', {"games": games, "user_has_active_games": user_has_active_games})
 
 
 @login_required
@@ -64,6 +71,7 @@ def joinin_game(request, pk):
             request, f'{request.user} is already playing in {game.name}!')
         pass
     games = Game.objects.all()
+    return redirect('home')
     return render(request, 'home.html', {"games": games})
 
 

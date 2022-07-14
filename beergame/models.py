@@ -1,4 +1,5 @@
 import json
+from urllib import request
 from django.db import models
 from accounts.models import User
 from datetime import datetime
@@ -6,15 +7,14 @@ from datetime import datetime
 
 class Game(models.Model):
     STATUSES = (
+        ("C", "Created"),
         ("S", "Started"),
-        ("A", "Active"),
-        ("I", "Inactive"),
-        ("C", "Completed"),
-        ("X", "Expired"),
+        ("F", "Finished"),
+        ("T", "Terminated"),
     )
     name = models.CharField(max_length=30, unique=True)
     status = models.CharField(
-        choices=STATUSES, max_length=1, blank=False, verbose_name="Status", default='S')
+        choices=STATUSES, max_length=1, blank=False, verbose_name="Status", default='C')
 
     created_by = models.ForeignKey(
         User, null=True, related_name='games', on_delete=models.CASCADE)
@@ -23,7 +23,7 @@ class Game(models.Model):
 
     max_turns = models.IntegerField(default=25,)
 
-    last_play_at = models.DateTimeField(null=True)
+    last_play_at = models.DateTimeField(null=True, blank=True)
 
     last_play_by = models.ForeignKey(
         User, related_name='last_plays', null=True, blank=True, on_delete=models.CASCADE)
@@ -38,6 +38,10 @@ class Game(models.Model):
         for rel in rels:
             players_str += f'{rel.player.username} '
         return players_str
+
+    def save(self,  *args, **kwargs):
+        self.next_play_by = self.created_by
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

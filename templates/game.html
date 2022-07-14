@@ -13,6 +13,7 @@
 </h6>
 <div>
     {% if game.next_play_by.username == request.user.username %}
+    {% if game.status == 'S' %}
     <h6>
         <form class="row g-2" method="post">
             {% csrf_token %}
@@ -25,10 +26,21 @@
             </div>
         </form>
     </h6>
+    {% endif %}
+    {% if game.status == 'C' %}
+
+    <div class="mb-4">
+        <a href="#" class="btn btn-primary">Start game</a>
+    </div>
+
+    {% endif %}
+
     {% else %}
+    {% if game.status == 'S' %}
     <h6>
         Now playing: {{game.next_play_by.username}}
     </h6>
+    {% endif %}
     {% endif %}
 </div>
 <table class="table">
