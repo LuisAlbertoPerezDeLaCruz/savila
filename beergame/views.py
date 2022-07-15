@@ -6,6 +6,7 @@ from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
 from django.db.models import Q
+from .beergame_env import calc_round
 
 
 def home(request):
@@ -103,7 +104,7 @@ def createGameTurnObject(request, game_player):
     n = GameTurn.objects.filter(game_player__game=game_player.game).count()
 
     if n % 4 == 0 and n > 0:
-        game_turn.round_result = gameTurnResult()
+        game_turn.round_result = calc_round(game_player.game.pk)
         game_turn.save()
 
     return game_turn
