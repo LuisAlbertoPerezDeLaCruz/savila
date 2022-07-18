@@ -1,7 +1,7 @@
 import random
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Game, GamePlayer, GameTurn, TokenForRefresh
+from .models import Game, GamePlayer, GameTurn, Institution, TokenForRefresh
 from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
@@ -10,6 +10,8 @@ from .beergame_env import calc_round
 
 
 def home(request):
+    institutions = Institution.objects.all()
+    institution = Institution.objects.get(name='IESEG')
     games = Game.objects.all()
     user_has_active_games = False
     try:
@@ -17,14 +19,15 @@ def home(request):
             Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
     except Exception as ex:
         pass
-    return render(request, 'home.html', {"games": games, "user_has_active_games": user_has_active_games})
+    return render(request, 'home.html', {"games": games, "user_has_active_games": user_has_active_games, "institutions": institutions, "institution": institution})
 
 
 @login_required
-def new_game(request):
+def new_game(request, institution_pk):
+    institution = Institution.objects.get(pk=institution_pk)
     game = Game()
     if request.method == 'POST':
-        form = NewGameForm(request.POST)
+        form = NewGameForm(request.POST, institution)
         if form.is_valid():
             game = form.save(commit=False)
             game.created_by = request.user
@@ -35,7 +38,7 @@ def new_game(request):
             )
             return redirect('home')
     else:
-        form = NewGameForm()
+        form = NewGameForm(institution)
     return render(request, 'new_game.html', {'game': game, 'form': form})
 
 

@@ -2,7 +2,6 @@ import json
 from urllib import request
 from django.db import models
 from accounts.models import User
-from datetime import datetime
 
 
 class Institution(models.Model):
@@ -39,9 +38,9 @@ class Course(models.Model):
 
     def __str__(self):
         if self.instructor:
-            f'{self.name}, {self.instructor.username}'
+            r = f'{self.name}, {self.instructor.username}'
         else:
-            r = f'{self.name}'
+            r = f'{self.name} unassigned'
         return r
 
 
@@ -60,6 +59,9 @@ class Game(models.Model):
 
     created_by = models.ForeignKey(
         User, null=True, related_name='games', on_delete=models.CASCADE)
+
+    institution = models.ForeignKey(
+        Institution, null=True, related_name='games', on_delete=models.CASCADE)
 
     course = models.ForeignKey(
         Course, null=True, related_name='games', on_delete=models.CASCADE)
