@@ -11,7 +11,7 @@ from .beergame_env import calc_round
 
 def home(request):
     institutions = Institution.objects.all()
-    institution = Institution.objects.get(name='IESEG')
+    institution = Institution.objects.get(name='Global')
     games = Game.objects.all()
     user_has_active_games = False
     try:
