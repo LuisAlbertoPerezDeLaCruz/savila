@@ -5,6 +5,46 @@ from accounts.models import User
 from datetime import datetime
 
 
+class Institution(models.Model):
+    STATUSES = (
+        ("A", "Active"),
+        ("I", "Inactive"),
+    )
+    name = models.CharField(max_length=30, unique=True)
+
+    status = models.CharField(
+        choices=STATUSES, max_length=1, blank=False, default='A')
+
+    is_global = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
+
+class Course(models.Model):
+    STATUSES = (
+        ("A", "Active"),
+        ("I", "Inactive"),
+    )
+    name = models.CharField(max_length=30, unique=True)
+
+    institution = models.ForeignKey(
+        Institution, null=True, related_name='courses', on_delete=models.CASCADE)
+
+    instructor = models.ForeignKey(
+        User, null=True, blank=True, related_name='courses', on_delete=models.CASCADE)
+
+    status = models.CharField(
+        choices=STATUSES, max_length=1, blank=False, default='A')
+
+    def __str__(self):
+        if self.instructor:
+            f'{self.name}, {self.instructor.username}'
+        else:
+            r = f'{self.name}'
+        return r
+
+
 class Game(models.Model):
     STATUSES = (
         ("C", "Created"),
@@ -12,12 +52,17 @@ class Game(models.Model):
         ("F", "Finished"),
         ("T", "Terminated"),
     )
+
     name = models.CharField(max_length=30, unique=True)
+
     status = models.CharField(
-        choices=STATUSES, max_length=1, blank=False, verbose_name="Status", default='C')
+        choices=STATUSES, max_length=1, blank=False, default='C')
 
     created_by = models.ForeignKey(
         User, null=True, related_name='games', on_delete=models.CASCADE)
+
+    course = models.ForeignKey(
+        Course, null=True, related_name='games', on_delete=models.CASCADE)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
