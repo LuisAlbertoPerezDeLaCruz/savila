@@ -9,9 +9,12 @@ from django.db.models import Q
 from .beergame_env import calc_round
 
 
-def home(request):
+def home(request, institution_pk=None):
     institutions = Institution.objects.all()
-    institution = Institution.objects.get(name='Global')
+    if institution_pk:
+        institution = Institution.objects.get(pk=institution_pk)
+    else:
+        institution = Institution.objects.get(name='Global')
     games = Game.objects.all()
     user_has_active_games = False
     try:
@@ -24,6 +27,7 @@ def home(request):
 
 @login_required
 def new_game(request, institution_pk):
+    institutions = Institution.objects.all()
     institution = Institution.objects.get(pk=institution_pk)
     game = Game()
     if request.method == 'POST':
@@ -39,7 +43,7 @@ def new_game(request, institution_pk):
             return redirect('home')
     else:
         form = NewGameForm(institution)
-    return render(request, 'new_game.html', {'game': game, 'form': form})
+    return render(request, 'new_game.html', {'game': game, "institutions": institutions, "institution": institution, 'form': form})
 
 
 @login_required

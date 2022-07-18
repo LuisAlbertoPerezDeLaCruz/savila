@@ -30,7 +30,7 @@
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="institutionsMenu">
               {% for institution in institutions %}
-              <a class="dropdown-item" href="#">{{ institution.name}}</a>
+              <a class="dropdown-item" href="{% url 'home' institution.pk %}">{{ institution.name}}</a>
               {% endfor %}
             </div>
           </li>
