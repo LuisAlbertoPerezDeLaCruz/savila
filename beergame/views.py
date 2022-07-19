@@ -31,10 +31,11 @@ def new_game(request, institution_pk):
     institution = Institution.objects.get(pk=institution_pk)
     game = Game()
     if request.method == 'POST':
-        form = NewGameForm(request.POST, institution)
+        form = NewGameForm(institution, request.POST)
         if form.is_valid():
             game = form.save(commit=False)
             game.created_by = request.user
+            game.institution = institution
             game.save()
             GamePlayer.objects.create(
                 game=game,
