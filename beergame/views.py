@@ -10,21 +10,29 @@ from .beergame_env import calc_round
 
 
 def home(request, institution_pk=None):
-    institutions = Institution.objects.all()
-    if institution_pk:
-        institution = Institution.objects.get(pk=institution_pk)
-    else:
+
+    if request.user.is_anonymous:
         institution = Institution.objects.get(name='Global')
-    courses = Course.objects.filter(
-        instructor=request.user, institution=institution_pk)
-    games = Game.objects.all()
-    user_has_active_games = False
-    try:
+        courses = Course.objects.filter(institution=institution)
+        user_has_active_games = False
+    elif institution_pk:
+        institution = Institution.objects.get(pk=institution_pk)
+        courses = Course.objects.filter(
+            institution=institution_pk)
         user_has_active_games = GamePlayer.objects.filter(
             Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
-    except Exception as ex:
-        pass
-    if request.user.is_instructor:
+    else:
+        institution = Institution.objects.get(name='Global')
+        courses = Course.objects.filter(institution=institution)
+        user_has_active_games = GamePlayer.objects.filter(
+            Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
+
+    institutions = Institution.objects.all()
+
+    games = Game.objects.filter(institution=institution)
+
+    if not request.user.is_anonymous and request.user.is_instructor:
+        courses = courses.filter(instructor=request.user)
         return render(request,  'instructor_home.html', {"institution": institution, "institutions": institutions, 'courses': courses})
     else:
         return render(request, 'home.html', {"games": games, "user_has_active_games": user_has_active_games, "institutions": institutions, "institution": institution})
