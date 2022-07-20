@@ -1,7 +1,7 @@
 import random
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Game, GamePlayer, GameTurn, Institution, TokenForRefresh
+from .models import Game, GamePlayer, GameTurn, Institution, Course, TokenForRefresh
 from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
@@ -15,6 +15,8 @@ def home(request, institution_pk=None):
         institution = Institution.objects.get(pk=institution_pk)
     else:
         institution = Institution.objects.get(name='Global')
+    courses = Course.objects.filter(
+        instructor=request.user, institution=institution_pk)
     games = Game.objects.all()
     user_has_active_games = False
     try:
@@ -22,7 +24,10 @@ def home(request, institution_pk=None):
             Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
     except Exception as ex:
         pass
-    return render(request, 'home.html', {"games": games, "user_has_active_games": user_has_active_games, "institutions": institutions, "institution": institution})
+    if request.user.is_instructor:
+        return render(request,  'instructor_home.html', {"institution": institution, "institutions": institutions, 'courses': courses})
+    else:
+        return render(request, 'home.html', {"games": games, "user_has_active_games": user_has_active_games, "institutions": institutions, "institution": institution})
 
 
 @login_required

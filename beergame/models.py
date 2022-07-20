@@ -44,6 +44,25 @@ class Course(models.Model):
         return r
 
 
+class Student(models.Model):
+    STATUSES = (
+        ("A", "Active"),
+        ("I", "Inactive"),
+    )
+
+    user = models.ForeignKey(
+        User, null=True, related_name='students', on_delete=models.CASCADE)
+
+    course = models.ForeignKey(
+        Course, null=True, related_name='students', on_delete=models.CASCADE)
+
+    status = models.CharField(
+        choices=STATUSES, max_length=1, blank=False, default='A')
+
+    def __str__(self):
+        return self.user.username
+
+
 class Game(models.Model):
     STATUSES = (
         ("C", "Created"),
