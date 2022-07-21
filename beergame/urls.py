@@ -5,7 +5,7 @@ urlpatterns = [
     path('', beergame_views.home, name='home'),
     path('home', beergame_views.home, name='home'),
     path('home/<int:institution_pk>/', beergame_views.home, name='home'),
-    path('new_game/<int:institution_pk>/',
+    path('new_game/<int:course_pk>/',
          beergame_views.new_game, name='new_game'),
     path('game_list/<int:course_pk>/',
          beergame_views.game_list, name='game_list'),

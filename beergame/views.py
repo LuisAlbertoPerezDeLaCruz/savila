@@ -63,25 +63,27 @@ def game_list(request, course_pk):
 
 
 @login_required
-def new_game(request, institution_pk):
+def new_game(request, course_pk):
+    course = Course.objects.get(pk=course_pk)
+    institution = course.institution
     institutions = Institution.objects.all()
-    institution = Institution.objects.get(pk=institution_pk)
     game = Game()
     if request.method == 'POST':
-        form = NewGameForm(institution, request.POST)
+        form = NewGameForm(request.POST)
         if form.is_valid():
             game = form.save(commit=False)
             game.created_by = request.user
             game.institution = institution
+            game.course = course
             game.save()
             GamePlayer.objects.create(
                 game=game,
                 player=request.user
             )
-            return redirect('home')
+        return redirect(f'/beergame/game_list/{course.pk}/')
     else:
-        form = NewGameForm(institution)
-    return render(request, 'new_game.html', {'game': game, "institutions": institutions, "institution": institution, 'form': form})
+        form = NewGameForm()
+    return render(request, 'new_game.html', {'course': course, 'institution': institution, 'institutions': institutions, 'game': game, 'form': form})
 
 
 @login_required

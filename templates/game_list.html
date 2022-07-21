@@ -9,7 +9,7 @@
 {% block content %}
 {% if not user_has_active_games %}
 <div class="mb-4">
-    <a href="{% url 'new_game' institution.pk %}" class="btn btn-primary">New game</a>
+    <a href="{% url 'new_game' course.pk %}" class="btn btn-primary">New game</a>
 </div>
 {% endif %}
 <table class="table">

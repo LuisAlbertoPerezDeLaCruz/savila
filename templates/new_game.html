@@ -3,8 +3,10 @@
 {% block title %}Start a New Game{% endblock %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
-<li class="breadcrumb-item active">New Game</li>
+<li class="breadcrumb-item"><a href="{% url 'home' institution.pk %}">Courses</a></li>
+<li class="breadcrumb-item active">{{course.name}}</li>
+<li class="breadcrumb-item active"><a href="{% url 'game_list' course.pk %}">Games</a></li>
+<li class="breadcrumb-item active">New</li>
 {% endblock %}
 
 {% block content %}
