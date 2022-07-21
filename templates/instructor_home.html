@@ -23,7 +23,7 @@
         {% for course in courses %}
         <tr>
             <td>
-                <a href="">{{ course.name }}</a>
+                <a href="{% url 'game_list' course.pk %}">{{ course.name }}</a>
             </td>
 
             <td class="align-middle">{{ course.get_status_display }}</td>

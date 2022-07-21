@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'home' institution.pk %}">Courses</a></li>
+<li class="breadcrumb-item active">{{course.name}}</li>
 <li class="breadcrumb-item active">Games</li>
 {% endblock %}
 

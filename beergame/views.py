@@ -24,7 +24,7 @@ def home(request, institution_pk=None):
 
     institutions = Institution.objects.all()
 
-    if not request.user.is_instructor:
+    if not request.user.is_anonymous and not request.user.is_instructor:
         for course in courses:
             student = Student.objects.filter(course=course, user=request.user)
             if student.exists():
