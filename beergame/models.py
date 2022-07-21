@@ -59,8 +59,11 @@ class Student(models.Model):
     status = models.CharField(
         choices=STATUSES, max_length=1, blank=False, default='A')
 
+    class Meta:
+        unique_together = ('user', 'course',)
+
     def __str__(self):
-        return self.user.username
+        return f'{self.user.username}, {self.course.name}'
 
 
 class Game(models.Model):

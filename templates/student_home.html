@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">Courses</li>
+{% endblock %}
+
+{% block content %}
+<table class="table">
+    <thead class="thead-inverse">
+        <tr>
+            <th>Course</th>
+            <th>Status</th>
+            <th>Institution</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for course in courses %}
+        <tr>
+            <td>
+                <a href="">{{ course.name }}</a>
+            </td>
+
+            <td class="align-middle">{{ course.get_status_display }}</td>
+
+            <td class="align-middle">{{ course.institution.name }}</td>
+
+            <td class="align-middle">
+                {% if not course.student_joined %}
+                <span>
+                    <a href="{% url 'joinin_course' course.pk %}">
+                        [join in]
+                    </a>
+                </span>
+                {% else %}
+                {{course.student_status}}
+                {% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

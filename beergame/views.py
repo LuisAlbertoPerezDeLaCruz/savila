@@ -1,7 +1,7 @@
 import random
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from .models import Game, GamePlayer, GameTurn, Institution, Course, TokenForRefresh
+from .models import Game, GamePlayer, GameTurn, Institution, Course, Student, TokenForRefresh
 from .forms import NewGameForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
@@ -29,13 +29,28 @@ def home(request, institution_pk=None):
 
     institutions = Institution.objects.all()
 
+    if not request.user.is_instructor:
+        for course in courses:
+            student = Student.objects.filter(course=course, user=request.user)
+            if student.exists():
+                course.student_joined = True
+                course.student_status = student[0].get_status_display
+
     games = Game.objects.filter(institution=institution)
 
     if not request.user.is_anonymous and request.user.is_instructor:
         courses = courses.filter(instructor=request.user)
-        return render(request,  'instructor_home.html', {"institution": institution, "institutions": institutions, 'courses': courses})
+        return render(request,  'instructor_home.html',
+                      {"institution": institution,
+                       "institutions": institutions,
+                       'courses': courses})
     else:
-        return render(request, 'home.html', {"games": games, "user_has_active_games": user_has_active_games, "institutions": institutions, "institution": institution})
+        return render(request, 'student_home.html',
+                      {"games": games,
+                       "user_has_active_games": user_has_active_games,
+                       "institutions": institutions,
+                       "institution": institution,
+                       'courses': courses})
 
 
 @login_required
@@ -105,6 +120,24 @@ def joinin_game(request, pk):
         pass
     games = Game.objects.all()
     return redirect('home')
+
+
+@login_required
+def joinin_course(request, pk):
+    course = Course.objects.get(pk=pk)
+    try:
+        Student.objects.create(
+            course=course,
+            user=request.user
+        )
+        messages.success(
+            request, f'{request.user} has joined in {course.name}!')
+    except:
+        messages.warning(
+            request, f'{request.user} is already joined in {course.name}!')
+        pass
+    courses = Course.objects.all()
+    return redirect(f'/beergame/home/{course.institution.pk}/')
 
 
 def get_token_for_refresh(request):
