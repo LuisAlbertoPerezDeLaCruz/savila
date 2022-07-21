@@ -9,7 +9,7 @@
     <thead class="thead-inverse">
         <tr>
             <th>Course</th>
-            <th>Status</th>
+            <th>Instructor</th>
             <th>Institution</th>
             <th>Status</th>
         </tr>
@@ -17,11 +17,20 @@
     <tbody>
         {% for course in courses %}
         <tr>
+            {% if course.student_status == 'Active' %}
             <td>
                 <a href="">{{ course.name }}</a>
             </td>
+            {% else %}
+            <td>
+                {{ course.name }}
+            </td>
 
-            <td class="align-middle">{{ course.get_status_display }}</td>
+            {% endif %}
+
+            <td>
+                {{ course.instructor }}
+            </td>
 
             <td class="align-middle">{{ course.institution.name }}</td>
 
