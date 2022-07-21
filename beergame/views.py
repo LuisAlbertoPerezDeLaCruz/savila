@@ -98,15 +98,30 @@ def game(request, pk):
         game = game_turn.game_player.game
 
     players = GamePlayer.objects.filter(game=pk).order_by('joined_at')
-    players_list = [
-        f'({pos_description(idx)}) {x.player.username}' for idx, x in enumerate(players)]
+
+    players_list = list()
+
+    for idx, player in enumerate(players):
+        try:
+            player.role = pos_description(idx)
+            players_list.append(
+                f'({player.role}) {player.player.username}')
+        except:
+            player.role = 'participant'
+            players_list.append(
+                f'({player.role}) {player.player.username}')
+
+    if request.user.is_instructor:
+        view = 'game_instructor_view.html'
+    else:
+        view = 'game_student_view.html'
     game_turns = GameTurn.objects.filter(game_player__game=pk).order_by('turn')
-    return render(request, 'game.html', {"game": game,
-                                         "players": players,
-                                         "players_list": players_list,
-                                         "game_turns": game_turns,
-                                         "institution": institution,
-                                         "institutions": institutions})
+    return render(request, view, {"game": game,
+                                  "players": players,
+                                  "players_list": players_list,
+                                  "game_turns": game_turns,
+                                  "institution": institution,
+                                  "institutions": institutions})
 
 
 def pos_description(pos):

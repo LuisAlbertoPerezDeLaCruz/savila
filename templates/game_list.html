@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-{% if not user_has_active_games %}
+{% if not user_has_active_games and not user.is_instructor %}
 <div class="mb-4">
     <a href="{% url 'new_game' course.pk %}" class="btn btn-primary">New game</a>
 </div>
@@ -40,14 +40,19 @@
             </td>
             <td class="align-middle">{{ game.institution.name }}</td>
             <td class="align-middle">{{ game.course.name }}</td>
+
+
             <td class="align-middle">
                 {{ game.playerslist}}
+                {% if not user.is_instructor %}
                 <span>
                     <a href="{% url 'joinin_game' game.pk %}" style="padding-left: 1em">
                         [join in]
                     </a>
                 </span>
+                {% endif %}
             </td>
+
         </tr>
         {% endfor %}
     </tbody>

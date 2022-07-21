@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{% url 'game_list' game.course.pk %}">Games</a></li>
+<li class="breadcrumb-item"><a href="{% url 'home' institution.pk %}">Courses</a></li>
+<li class="breadcrumb-item active">{{game.course.name}}</li>
+<li class="breadcrumb-item active"><a href="{% url 'game_list' game.course.pk %}">Games</a></li>
 <li class="breadcrumb-item active">{{game.name}}</li>
 {% endblock %}
 

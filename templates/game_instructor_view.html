@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'home' institution.pk %}">Courses</a></li>
+<li class="breadcrumb-item active">{{game.course.name}}</li>
+<li class="breadcrumb-item active"><a href="{% url 'game_list' game.course.pk %}">Games</a></li>
+<li class="breadcrumb-item active">{{game.name}}</li>
+{% endblock %}
+
+{% block content %}
+
+<table class="table">
+    <thead class="thead-inverse">
+        <tr>
+            <th>player</th>
+            <th>role</th>
+            <th>result</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for player in players %}
+        <tr>
+            <td>
+                {{ player.player.username }}</a>
+            </td>
+            <td>
+                {{ player.role }}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
