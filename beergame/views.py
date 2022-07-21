@@ -14,18 +14,13 @@ def home(request, institution_pk=None):
     if request.user.is_anonymous:
         institution = Institution.objects.get(name='Global')
         courses = Course.objects.filter(institution=institution)
-        user_has_active_games = False
     elif institution_pk:
         institution = Institution.objects.get(pk=institution_pk)
         courses = Course.objects.filter(
             institution=institution_pk)
-        user_has_active_games = GamePlayer.objects.filter(
-            Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
     else:
         institution = Institution.objects.get(name='Global')
         courses = Course.objects.filter(institution=institution)
-        user_has_active_games = GamePlayer.objects.filter(
-            Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
 
     institutions = Institution.objects.all()
 
@@ -36,8 +31,6 @@ def home(request, institution_pk=None):
                 course.student_joined = True
                 course.student_status = student[0].get_status_display
 
-    games = Game.objects.filter(institution=institution)
-
     if not request.user.is_anonymous and request.user.is_instructor:
         courses = courses.filter(instructor=request.user)
         return render(request,  'instructor_home.html',
@@ -46,11 +39,27 @@ def home(request, institution_pk=None):
                        'courses': courses})
     else:
         return render(request, 'student_home.html',
-                      {"games": games,
-                       "user_has_active_games": user_has_active_games,
-                       "institutions": institutions,
+                      {"institutions": institutions,
                        "institution": institution,
                        'courses': courses})
+
+
+@login_required
+def game_list(request, course_pk):
+    course = Course.objects.get(pk=course_pk)
+    institution = course.institution
+    institutions = Institution.objects.all()
+    user_has_active_games = GamePlayer.objects.filter(
+        Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
+    games = Game.objects.filter(course=course)
+
+    return render(request, 'game_list.html',
+                  {"institutions": institutions,
+                   "institution": institution,
+                   'course': course,
+                   'games': games,
+                   'user_has_active_games': user_has_active_games,
+                   })
 
 
 @login_required
@@ -77,7 +86,9 @@ def new_game(request, institution_pk):
 
 @login_required
 def game(request, pk):
+    institutions = Institution.objects.all()
     game = Game.objects.get(pk=pk)
+    institution = game.institution
     if request.method == 'POST':
         game_player = GamePlayer.objects.get(
             game=game, player=request.user)
@@ -91,7 +102,9 @@ def game(request, pk):
     return render(request, 'game.html', {"game": game,
                                          "players": players,
                                          "players_list": players_list,
-                                         "game_turns": game_turns})
+                                         "game_turns": game_turns,
+                                         "institution": institution,
+                                         "institutions": institutions})
 
 
 def pos_description(pos):

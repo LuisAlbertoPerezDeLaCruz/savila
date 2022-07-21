@@ -19,7 +19,7 @@
         <tr>
             {% if course.student_status == 'Active' %}
             <td>
-                <a href="">{{ course.name }}</a>
+                <a href="{% url 'game_list' course.pk %}">{{ course.name }}</a>
             </td>
             {% else %}
             <td>

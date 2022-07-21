@@ -4,14 +4,18 @@ from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 
 from accounts.models import User
-from .models import Game, GamePlayer, GameTurn, TokenForRefresh
+from .models import Game, GamePlayer, GameTurn, TokenForRefresh, Course, Student
 import uuid
 from datetime import datetime
 
 
+@receiver(post_save, sender=Course)
+@receiver(post_save, sender=Student)
 @receiver(post_save, sender=Game)
 @receiver(post_save, sender=GamePlayer)
 @receiver(post_save, sender=GameTurn)
+@receiver(post_delete, sender=Course)
+@receiver(post_delete, sender=Student)
 @receiver(post_delete, sender=Game)
 @receiver(post_delete, sender=GamePlayer)
 @receiver(post_delete, sender=GameTurn)
