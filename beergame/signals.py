@@ -68,7 +68,7 @@ def gameExtraInfoUpdate(go_ahead, instance):
             curr_idx = _.index(instance.game_player.player.username)
             next_idx_ = curr_idx + 1
 
-            if next_idx_ > len(_)-1:
+            if next_idx_ > 3:  # len(_)-1:
                 next_idx = 0
             else:
                 next_idx = next_idx_

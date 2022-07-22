@@ -2,7 +2,7 @@ import random
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from .models import Game, GamePlayer, GameTurn, Institution, Course, Student, TokenForRefresh
-from .forms import NewGameForm
+from .forms import NewCourseForm, NewGameForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
 from django.db.models import Q
@@ -60,6 +60,28 @@ def game_list(request, course_pk):
                    'games': games,
                    'user_has_active_games': user_has_active_games,
                    })
+
+
+@login_required
+def new_course(request, institution_pk):
+    institution = Institution.objects.get(pk=institution_pk)
+    institutions = Institution.objects.all()
+    course = Course()
+    if request.method == 'POST':
+        form = NewCourseForm(request.POST)
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.created_by = request.user
+            course.institution = institution
+            course.instructor = request.user
+            course.course = course
+            course.save()
+            courses = Course.objects.filter(instructor=request.user)
+            return redirect(f'/beergame/home/{institution.pk}/')
+    else:
+        form = NewGameForm()
+    return render(request,  'new_course.html',
+                  {"institution": institution, "institutions": institutions, 'form': form})
 
 
 @login_required

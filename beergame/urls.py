@@ -7,6 +7,8 @@ urlpatterns = [
     path('home/<int:institution_pk>/', beergame_views.home, name='home'),
     path('new_game/<int:course_pk>/',
          beergame_views.new_game, name='new_game'),
+    path('new_course/<int:institution_pk>/',
+         beergame_views.new_course, name='new_course'),
     path('game_list/<int:course_pk>/',
          beergame_views.game_list, name='game_list'),
     path('game/<int:pk>/', beergame_views.game, name='game'),

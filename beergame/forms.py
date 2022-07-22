@@ -11,3 +11,14 @@ class NewGameForm(forms.ModelForm):
     class Meta:
         model = Game
         fields = ['name']
+
+
+class NewCourseForm(forms.ModelForm):
+    name = forms.CharField(
+        max_length=50,
+        help_text='Give the course name'
+    )
+
+    class Meta:
+        model = Course
+        fields = ['name']

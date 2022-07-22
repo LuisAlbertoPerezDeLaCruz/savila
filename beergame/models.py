@@ -103,7 +103,7 @@ class Game(models.Model):
     turns_played = models.IntegerField(default=0)
 
     def playerslist(self):
-        rels = self.players.all()
+        rels = self.players.all().order_by('pk')
         players_str = ''
         for idx, rel in enumerate(rels):
             players_str += f'{rel.player.username} '
