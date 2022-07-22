@@ -11,17 +11,19 @@
 <table class="table">
     <thead class="thead-inverse">
         <tr>
-            <th>Username</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Username</th>
+            <th>Email</th>
         </tr>
     </thead>
     <tbody>
         {% for student in students %}
         <tr>
-            <td class="align-middle">{{ student.user.username }}</td>
             <td class="align-middle">{{ student.user.first_name }}</td>
             <td class="align-middle">{{ student.user.last_name }}</td>
+            <td class="align-middle">{{ student.user.username }}</td>
+            <td class="align-middle">{{ student.user.email }}</td>
         </tr>
         {% endfor %}
     </tbody>
