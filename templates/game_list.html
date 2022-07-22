@@ -19,6 +19,7 @@
             <th>Status</th>
             <th>Created</th>
             <th>Players</th>
+            <th>Result</th>
         </tr>
     </thead>
     <tbody>
@@ -47,6 +48,13 @@
                 </span>
                 {% endif %}
             </td>
+
+            <td class="align-middle">
+                {% if game.result > -1 %}
+                {{game.result}}
+                {% endif %}
+            </td>
+
 
         </tr>
         {% endfor %}
