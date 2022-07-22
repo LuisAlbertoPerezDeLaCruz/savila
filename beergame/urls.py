@@ -11,6 +11,8 @@ urlpatterns = [
          beergame_views.new_course, name='new_course'),
     path('game_list/<int:course_pk>/',
          beergame_views.game_list, name='game_list'),
+    path('course_student_list/<int:course_pk>/',
+         beergame_views.course_student_list, name='course_student_list'),
     path('game/<int:pk>/', beergame_views.game, name='game'),
     path('joinin_game/<int:pk>/', beergame_views.joinin_game, name='joinin_game'),
     path('joinin_course/<int:pk>/',

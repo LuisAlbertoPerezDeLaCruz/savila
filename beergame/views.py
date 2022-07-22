@@ -63,6 +63,21 @@ def game_list(request, course_pk):
 
 
 @login_required
+def course_student_list(request, course_pk):
+    course = Course.objects.get(pk=course_pk)
+    institution = course.institution
+    institutions = Institution.objects.all()
+    students = Student.objects.filter(
+        course=course).order_by('user__first_name')
+    return render(request, 'course_student_list.html',
+                  {"institutions": institutions,
+                   "institution": institution,
+                   'course': course,
+                   'students': students,
+                   })
+
+
+@login_required
 def new_course(request, institution_pk):
     institution = Institution.objects.get(pk=institution_pk)
     institutions = Institution.objects.all()

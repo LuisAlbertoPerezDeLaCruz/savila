@@ -15,23 +15,25 @@
         <tr>
             <th>Course</th>
             <th>Status</th>
-            <th>Institution</th>
             <th>Students</th>
+            <th>Games</th>
         </tr>
     </thead>
     <tbody>
         {% for course in courses %}
         <tr>
             <td>
-                <a href="{% url 'game_list' course.pk %}">{{ course.name }}</a>
+                {{ course.name }}
             </td>
 
             <td class="align-middle">{{ course.get_status_display }}</td>
 
-            <td class="align-middle">{{ course.institution.name }}</td>
+            <td class="align-middle">
+                <a href="{% url 'course_student_list' course.pk %}">{{ course.students.count }}</a>
+            </td>
 
             <td class="align-middle">
-                {{ course.students.count }}
+                <a href="{% url 'game_list' course.pk %}">{{ course.games.count }}</a>
             </td>
         </tr>
         {% endfor %}
