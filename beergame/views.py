@@ -170,10 +170,10 @@ def game(request, pk):
             game_player__game=pk, game_player__player=request.user).order_by('turn')
 
         result_data = [
-            [1, 13, 0, 2, 3, 25],
-            [4, 14, 17, 5, 6, 25],
-            [7, 15, 18, 8, 9, 25],
-            [10, 16, 19, 11, 12, 25],
+            [1, 13, 0, 2, 3, 25, 26],
+            [4, 14, 17, 5, 6, 25, 26],
+            [7, 15, 18, 8, 9, 25, 26],
+            [10, 16, 19, 11, 12, 25, 26],
         ]
 
         for game_turn in game_turns:
@@ -185,6 +185,7 @@ def game(request, pk):
             game_turn.received_product = round_result[result_data[pos][3]]
             game_turn.to_receive = round_result[result_data[pos][4]]
             game_turn.round_cost = round_result[result_data[pos][5]]
+            game_turn.cumulative_cost = round_result[result_data[pos][6]]
 
         view = 'game_student_view.html'
 
