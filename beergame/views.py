@@ -53,6 +53,10 @@ def game_list(request, course_pk):
         Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
     games = Game.objects.filter(course=course)
 
+    for game in games:
+        game.user_joined = GamePlayer.objects.filter(
+            game=game, player=request.user).exists()
+
     return render(request, 'game_list.html',
                   {"institutions": institutions,
                    "institution": institution,
@@ -186,7 +190,7 @@ def joinin_game(request, pk):
             request, f'{request.user} is already playing in {game.name}!')
         pass
     games = Game.objects.all()
-    return redirect('home')
+    return redirect(f'/beergame/game_list/{game.course.pk}/')
 
 
 @login_required
