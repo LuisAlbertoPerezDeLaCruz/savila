@@ -55,7 +55,7 @@ def calc_round(game_pk):
     game_turns = GameTurn.objects.filter(
         game_player__game=game_pk).order_by('-pk')
 
-    if game.turns_played == 4:
+    if game.turns_played <= 4:
         previous_round = [0]*27
 
         previous_round[DEM_CON] = 0
@@ -95,9 +95,19 @@ def calc_round(game_pk):
         previous_round[ACM_RES] = 0
 
     else:
-        previous_round = json.loads(game_turns[4].round_result)
+        previous_round = json.loads(game_turns[1].round_result)
 
-    current_actions = [x.value_played for x in game_turns.reverse()][-4:]
+    current_actions = [0]*4
+
+    for idx, value in enumerate(game_turns):
+        if idx > 3:
+            break
+        current_actions[idx] = value.value_played
+
+    if game.turn_pointer == 2:
+        current_actions = current_actions[0:2][::-1]+current_actions[2:]
+    elif game.turn_pointer == 3:
+        current_actions = current_actions[0:3][::-1]+current_actions[3:]
 
     last_turn = game_turns.reverse().last()
 
@@ -105,64 +115,72 @@ def calc_round(game_pk):
 
     state = previous_round
 
-    backlog_retailer = state[BCK_RET]
-    backlog_wholesaler = state[BCK_WHS]
-    backlog_distributor = state[BCK_DIS]
-    backlog_manufacturer = state[BCK_MNF]
+    if game.turns_played > 4 and game.turns_played % 4 == 0:  # Cambio el turno
+        current_actions = current_actions[::-1]
+        backlog_retailer = state[BCK_RET]
+        backlog_wholesaler = state[BCK_WHS]
+        backlog_distributor = state[BCK_DIS]
+        backlog_manufacturer = state[BCK_MNF]
 
-    state[DEM_CON] = current_demand
-    demand_backlog_retailer = current_demand + backlog_retailer
-    sales_retailer = min(demand_backlog_retailer, state[INV_RET])
-    backlog_retailer = demand_backlog_retailer - sales_retailer
-    state[BCK_RET] = backlog_retailer
-    inv_retailer = state[INV_RET] - sales_retailer + state[TR1_RET]
-    state[INV_RET] = inv_retailer
-    state[TR1_RET] = state[TR2_RET]
+        state[DEM_CON] = current_demand
+        demand_backlog_retailer = current_demand + backlog_retailer
+        sales_retailer = min(demand_backlog_retailer, state[INV_RET])
+        backlog_retailer = demand_backlog_retailer - sales_retailer
+        state[BCK_RET] = backlog_retailer
+        inv_retailer = state[INV_RET] - sales_retailer + state[TR1_RET]
+        state[INV_RET] = inv_retailer
+        state[TR1_RET] = state[TR2_RET]
 
-    demand_retailer = current_actions[CUR_ACT_RET]
-    demand_backlog_wholesaler = demand_retailer + backlog_wholesaler
-    sales_wholesaler = min(demand_backlog_wholesaler, state[INV_WHS])
-    state[TR2_RET] = sales_wholesaler
-    backlog_wholesaler = demand_backlog_wholesaler - sales_wholesaler
-    state[BCK_WHS] = backlog_wholesaler
-    inv_wholesaler = state[INV_WHS] - sales_wholesaler + state[TR1_WHS]
-    state[INV_WHS] = inv_wholesaler
-    state[TR1_WHS] = state[TR2_WHS]
+        demand_retailer = current_actions[CUR_ACT_RET]
+        demand_backlog_wholesaler = demand_retailer + backlog_wholesaler
+        sales_wholesaler = min(demand_backlog_wholesaler, state[INV_WHS])
+        state[TR2_RET] = sales_wholesaler
+        backlog_wholesaler = demand_backlog_wholesaler - sales_wholesaler
+        state[BCK_WHS] = backlog_wholesaler
+        inv_wholesaler = state[INV_WHS] - sales_wholesaler + state[TR1_WHS]
+        state[INV_WHS] = inv_wholesaler
+        state[TR1_WHS] = state[TR2_WHS]
 
-    demand_wholesaler = current_actions[CUR_ACT_WHS]
-    demand_backlog_distributor = demand_wholesaler + backlog_distributor
-    sales_distributor = min(demand_backlog_distributor, state[INV_DIS])
-    state[TR2_WHS] = sales_distributor
-    backlog_distributor = demand_backlog_distributor - sales_distributor
-    state[BCK_DIS] = backlog_distributor
-    inv_distributor = state[INV_DIS] - sales_distributor + state[TR1_DIS]
-    state[INV_DIS] = inv_distributor
-    state[TR1_DIS] = state[TR2_DIS]
+        demand_wholesaler = current_actions[CUR_ACT_WHS]
+        demand_backlog_distributor = demand_wholesaler + backlog_distributor
+        sales_distributor = min(demand_backlog_distributor, state[INV_DIS])
+        state[TR2_WHS] = sales_distributor
+        backlog_distributor = demand_backlog_distributor - sales_distributor
+        state[BCK_DIS] = backlog_distributor
+        inv_distributor = state[INV_DIS] - sales_distributor + state[TR1_DIS]
+        state[INV_DIS] = inv_distributor
+        state[TR1_DIS] = state[TR2_DIS]
 
-    demand_distributor = current_actions[CUR_ACT_DIS]
-    demand_backlog_manufacturer = demand_distributor + backlog_manufacturer
-    sales_manufacturer = min(demand_backlog_manufacturer, state[INV_MNF])
-    state[TR2_DIS] = sales_manufacturer
-    backlog_manufacturer = demand_backlog_manufacturer - sales_manufacturer
-    state[BCK_MNF] = backlog_manufacturer
-    inv_manufacturer = state[INV_MNF] - sales_manufacturer + state[TR1_MNF]
-    state[INV_MNF] = inv_manufacturer
-    state[TR1_MNF] = state[TR2_MNF]
+        demand_distributor = current_actions[CUR_ACT_DIS]
+        demand_backlog_manufacturer = demand_distributor + backlog_manufacturer
+        sales_manufacturer = min(demand_backlog_manufacturer, state[INV_MNF])
+        state[TR2_DIS] = sales_manufacturer
+        backlog_manufacturer = demand_backlog_manufacturer - sales_manufacturer
+        state[BCK_MNF] = backlog_manufacturer
+        inv_manufacturer = state[INV_MNF] - sales_manufacturer + state[TR1_MNF]
+        state[INV_MNF] = inv_manufacturer
+        state[TR1_MNF] = state[TR2_MNF]
 
-    state[TR2_MNF] = current_actions[CUR_ACT_MNF]
+        state[TR2_MNF] = current_actions[CUR_ACT_MNF]
 
-    state[DEC_RET] = current_actions[CUR_ACT_RET]
-    state[DEC_WHS] = current_actions[CUR_ACT_WHS]
-    state[DEC_DIS] = current_actions[CUR_ACT_DIS]
-    state[DEC_MNF] = current_actions[CUR_ACT_MNF]
+        state[DEC_RET] = current_actions[CUR_ACT_RET]
+        state[DEC_WHS] = current_actions[CUR_ACT_WHS]
+        state[DEC_DIS] = current_actions[CUR_ACT_DIS]
+        state[DEC_MNF] = current_actions[CUR_ACT_MNF]
 
-    state[RES_RET] = state[BCK_RET]*25 + state[INV_RET]*5
-    state[RES_WHS] = state[BCK_WHS]*25 + state[INV_WHS]*5
-    state[RES_DIS] = state[BCK_DIS]*25 + state[INV_DIS]*5
-    state[RES_MNF] = state[BCK_MNF]*25 + state[INV_MNF]*5
+        state[RES_RET] = state[BCK_RET]*25 + state[INV_RET]*5
+        state[RES_WHS] = state[BCK_WHS]*25 + state[INV_WHS]*5
+        state[RES_DIS] = state[BCK_DIS]*25 + state[INV_DIS]*5
+        state[RES_MNF] = state[BCK_MNF]*25 + state[INV_MNF]*5
 
-    state[TRN_RES] = state[RES_RET] + \
-        state[RES_WHS] + state[RES_DIS] + state[RES_MNF]
-    state[ACM_RES] = previous_round[ACM_RES] + state[TRN_RES]
+        state[TRN_RES] = state[RES_RET] + \
+            state[RES_WHS] + state[RES_DIS] + state[RES_MNF]
+        state[ACM_RES] = previous_round[ACM_RES] + state[TRN_RES]
 
-    return [int(x) for x in state]
+        return [int(x) for x in state]
+    else:
+        state[DEC_RET] = current_actions[CUR_ACT_RET]
+        state[DEC_WHS] = current_actions[CUR_ACT_WHS]
+        state[DEC_DIS] = current_actions[CUR_ACT_DIS]
+        state[DEC_MNF] = current_actions[CUR_ACT_MNF]
+        return [int(x) for x in state]

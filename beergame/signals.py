@@ -73,6 +73,8 @@ def gameExtraInfoUpdate(go_ahead, instance):
             else:
                 next_idx = next_idx_
 
+            instance.game_player.game.turn_pointer = next_idx
+
             next_player = User.objects.get(username=_[next_idx])
 
             instance.game_player.game.next_play_by = next_player

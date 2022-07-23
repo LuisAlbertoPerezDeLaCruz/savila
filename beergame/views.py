@@ -1,3 +1,4 @@
+import json
 import random
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -7,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages  # import messages
 from django.db.models import Q
 from .beergame_env import calc_round
+import json
 
 
 def home(request, institution_pk=None):
@@ -152,11 +154,40 @@ def game(request, pk):
             players_list.append(
                 f'({player.role}) {player.player.username}')
 
+    game_players = GamePlayer.objects.filter(game=game).order_by('pk')
+
     if request.user.is_instructor:
+        game_turns = GameTurn.objects.filter(
+            game_player__game=pk).order_by('turn')
         view = 'game_instructor_view.html'
     else:
+        pos = -1
+        for idx, player in enumerate(game_players):
+            if player.player == request.user:
+                pos = idx
+                break
+        game_turns = GameTurn.objects.filter(
+            game_player__game=pk, game_player__player=request.user).order_by('turn')
+
+        result_data = [
+            [1, 13, 0, 2, 3, 25],
+            [4, 14, 17, 5, 6, 25],
+            [7, 15, 18, 8, 9, 25],
+            [10, 16, 19, 11, 12, 25],
+        ]
+
+        for game_turn in game_turns:
+            game_turn.value_played = int(game_turn.value_played)
+            round_result = json.loads(game_turn.round_result)
+            game_turn.inventory = round_result[result_data[pos][0]]
+            game_turn.backlog = round_result[result_data[pos][1]]
+            game_turn.order_client = round_result[result_data[pos][2]]
+            game_turn.received_product = round_result[result_data[pos][3]]
+            game_turn.to_receive = round_result[result_data[pos][4]]
+            game_turn.round_cost = round_result[result_data[pos][5]]
+
         view = 'game_student_view.html'
-    game_turns = GameTurn.objects.filter(game_player__game=pk).order_by('turn')
+
     return render(request, view, {"game": game,
                                   "players": players,
                                   "players_list": players_list,
@@ -228,9 +259,8 @@ def createGameTurnObject(request, game_player):
 
     n = GameTurn.objects.filter(game_player__game=game_player.game).count()
 
-    if n % 4 == 0 and n > 0:
-        game_turn.round_result = calc_round(game_player.game.pk)
-        game_turn.save()
+    game_turn.round_result = calc_round(game_player.game.pk)
+    game_turn.save()
 
     return game_turn
 

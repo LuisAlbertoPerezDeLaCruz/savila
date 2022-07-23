@@ -102,6 +102,8 @@ class Game(models.Model):
 
     turns_played = models.IntegerField(default=0)
 
+    turn_pointer = models.IntegerField(default=0)
+
     result = models.IntegerField(default=-1)
 
     def playerslist(self):
