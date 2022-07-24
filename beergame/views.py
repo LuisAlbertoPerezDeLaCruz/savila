@@ -282,7 +282,14 @@ def get_token_for_refresh(request):
 
 
 def createGameTurnObject(request, game_player):
-    value_played = float(request.POST.get('played_value', 0))
+
+    try:
+        value_played = float(request.POST.get('played_value', 0))
+    except:
+        messages.error(
+            request, f'Order not valid, please type a number!')
+        game_turn = GameTurn.objects.last()
+        return game_turn
 
     game_turn = GameTurn.objects.create(
         game_player=game_player,

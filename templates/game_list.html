@@ -16,6 +16,7 @@
     <thead class="thead-inverse">
         <tr>
             <th>Game</th>
+            <th>Length</th>
             <th>Status</th>
             <th>Created</th>
             <th>Players</th>
@@ -28,6 +29,9 @@
             <td>
                 <a href="{% url 'game' game.pk %}">{{ game.name }}</a>
             </td>
+
+            <td class="align-middle">{{ game.max_turns }}</td>
+
             <td class="align-middle">{{ game.get_status_display }}</td>
 
             <td class="align-middle">

@@ -10,7 +10,7 @@ class NewGameForm(forms.ModelForm):
 
     class Meta:
         model = Game
-        fields = ['name']
+        fields = ['name', 'max_turns']
 
 
 class NewCourseForm(forms.ModelForm):
