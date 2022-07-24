@@ -104,7 +104,7 @@ class Game(models.Model):
 
     turn_pointer = models.IntegerField(default=0)
 
-    result = models.IntegerField(default=-1)
+    final_result = models.IntegerField(default=-1)
 
     def playerslist(self):
         rels = self.players.all().order_by('pk')

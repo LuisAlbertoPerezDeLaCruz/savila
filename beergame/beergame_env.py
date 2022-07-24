@@ -115,7 +115,7 @@ def calc_round(game_pk):
 
     state = previous_round
 
-    if game.turns_played > 4 and game.turns_played % 4 == 0:  # Cambio el turno
+    if game.turns_played >= 4 and game.turns_played % 4 == 0:  # Cambio el turno
         current_actions = current_actions[::-1]
         backlog_retailer = state[BCK_RET]
         backlog_wholesaler = state[BCK_WHS]

@@ -2,6 +2,9 @@ import json
 import random
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+
+from accounts.models import User
+
 from .models import Game, GamePlayer, GameTurn, Institution, Course, Student, TokenForRefresh
 from .forms import NewCourseForm, NewGameForm
 from django.contrib.auth.decorators import login_required
@@ -9,6 +12,7 @@ from django.contrib import messages  # import messages
 from django.db.models import Q
 from .beergame_env import calc_round
 import json
+import numpy as np
 
 
 def home(request, institution_pk=None):
@@ -291,15 +295,25 @@ def createGameTurnObject(request, game_player):
         game_turn = GameTurn.objects.last()
         return game_turn
 
+    game = game_player.game
+    bots = game.players.filter(player__is_bot=True)
+
     game_turn = GameTurn.objects.create(
         game_player=game_player,
         value_played=value_played,
         round_result='')
-
-    n = GameTurn.objects.filter(game_player__game=game_player.game).count()
-
     game_turn.round_result = calc_round(game_player.game.pk)
     game_turn.save()
+
+    if bots:
+        for bot in bots:
+            game_turn_bot = GameTurn.objects.create(
+                game_player=bot,
+                value_played=value_played + np.random.randint(5),
+                round_result='')
+            game_turn_bot.round_result = calc_round(game_player.game.pk)
+            game_turn_bot.save()
+        return game_turn_bot
 
     return game_turn
 
@@ -317,6 +331,10 @@ def gameTurnResult():
 
 def start_game(request, pk):
     game = Game.objects.get(pk=pk)
+    missing = 4 - game.players.count()
+    robots = User.objects.filter(is_bot=True)
+    for idx in range(missing):
+        GamePlayer.objects.create(game=game, player=robots[idx])
     game.status = 'S'
     game.save()
     messages.success(
