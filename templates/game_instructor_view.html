@@ -8,40 +8,96 @@
 {% endblock %}
 
 {% block content %}
+<h6>Players:
+    {% for player in players_list %}
+    {{player}} &nbsp;
+    {% endfor %}
+</h6>
+<br>
 
 <table class="table">
     <thead class="thead-inverse">
         <tr>
-            <th>player</th>
+            <th>round</th>
             <th>role</th>
-            <th>result</th>
+            <th>order</th>
+            <th>inventory</th>
+            <th>backlog</th>
+            <th>client order</th>
+            <th>in transit 1</th>
+            <th>in transit 2</th>
+            <th>rpc ($)</th>
+            <th>tscc ($)</th>
+            <th>cumc ($)</th>
         </tr>
     </thead>
     <tbody>
-        {% for player in players %}
+        {% for game_turn in game_turns %}
         <tr>
-            <td>
-                {{ player.player.username }}</a>
+            <td class="align-middle">
+                {{ game_turn.round }}</a>
             </td>
-            <td>
-                {{ player.role }}</a>
+
+            <td class="align-middle">
+                {{ game_turn.role }}</a>
             </td>
+
+            <td class="align-middle">
+                {{ game_turn.value_played }}
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.inventory }}
+
+            </td>
+
+
+            <td class="align-middle">
+
+                {{ game_turn.backlog }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.order_client }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.received_product }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.to_receive }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.round_pos_cost }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.round_cost }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.cumulative_cost }}
+
+            </td>
+
         </tr>
         {% endfor %}
-    </tbody>
-</table>
 
-<table class="table">
-    <thead class="thead-inverse">
-        <tr>
-            <th>turn</th>
-            <th>player</th>
-            <th>role</th>
-            <th>desition</th>
-            <th>result</th>
-        </tr>
-    </thead>
-    <tbody>
     </tbody>
 </table>
 

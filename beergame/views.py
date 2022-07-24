@@ -157,9 +157,40 @@ def game(request, pk):
     game_players = GamePlayer.objects.filter(game=game).order_by('pk')
 
     if request.user.is_instructor:
+        roles = [
+            'Retailer',
+            'Wholesaler',
+            'Distributor',
+            'Manufacturer'
+        ]
         game_turns = GameTurn.objects.filter(
             game_player__game=pk).order_by('turn')
-        view = 'game_instructor_view.html'
+
+        result_data = [
+            [1, 13, 0, 2, 3, 21, 25, 26],
+            [4, 14, 17, 5, 6, 22, 25, 26],
+            [7, 15, 18, 8, 9, 23, 25, 26],
+            [10, 16, 19, 11, 12, 24, 25, 26],
+        ]
+        for game_turn in game_turns:
+            pos = -1
+            for idx, player in enumerate(game_players):
+                if game_turn.game_player == player:
+                    pos = idx
+                    break
+            game_turn.role = roles[pos]
+            game_turn.value_played = int(game_turn.value_played)
+            round_result = json.loads(game_turn.round_result)
+            game_turn.inventory = round_result[result_data[pos][0]]
+            game_turn.backlog = round_result[result_data[pos][1]]
+            game_turn.order_client = round_result[result_data[pos][2]]
+            game_turn.received_product = round_result[result_data[pos][3]]
+            game_turn.to_receive = round_result[result_data[pos][4]]
+            game_turn.round_pos_cost = round_result[result_data[pos][5]]
+            game_turn.round_cost = round_result[result_data[pos][6]]
+            game_turn.cumulative_cost = round_result[result_data[pos][7]]
+
+            view = 'game_instructor_view.html'
     else:
         pos = -1
         for idx, player in enumerate(game_players):
