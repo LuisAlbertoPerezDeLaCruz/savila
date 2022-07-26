@@ -148,6 +148,11 @@ def game(request, pk):
         game_player = GamePlayer.objects.get(
             game=game, player=request.user)
         game_turn = createGameTurnObject(request, game_player)
+        rounds_played = game_turn.game_player.game.turns_played // 4
+        if rounds_played >= game_turn.game_player.game.max_turns:
+            round_result = game_turn.round_result
+            game.final_result = round_result[26]
+            game.save()
         game = game_turn.game_player.game
 
     players = GamePlayer.objects.filter(game=pk).order_by('joined_at')
@@ -396,17 +401,6 @@ def createGameTurnObject(request, game_player):
         return game_turn_bot
 
     return game_turn
-
-
-def gameTurnResult():
-    result = list()
-    for i in range(4):
-        internal = list()
-        for j in range(3):
-            n = random.randint(0, 100)
-            internal.append(n)
-        result.append(internal)
-    return result
 
 
 def start_game(request, pk):

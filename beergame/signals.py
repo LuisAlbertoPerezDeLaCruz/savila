@@ -1,5 +1,6 @@
 # savila/signals.py
 
+import json
 from django.db.models.signals import post_save, post_delete, pre_delete
 from django.dispatch import receiver
 
@@ -81,7 +82,7 @@ def gameExtraInfoUpdate(go_ahead, instance):
 
             rounds_played = instance.game_player.game.turns_played // 4
 
-            if instance.game_player.game.max_turns >= rounds_played:
+            if rounds_played >= instance.game_player.game.max_turns:
                 instance.game_player.game.status = 'F'
 
             instance.game_player.game.save()
