@@ -26,9 +26,15 @@
     <tbody>
         {% for game in games %}
         <tr>
+            {% if game.user_joined %}
             <td>
                 <a href="{% url 'game' game.pk %}">{{ game.name }}</a>
             </td>
+            {% else %}
+            <td>
+                {{ game.name }}</a>
+            </td>
+            {% endif %}
 
             <td class="align-middle">{{ game.max_turns }}</td>
 
