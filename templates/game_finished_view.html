@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'home' institution.pk %}">Courses</a></li>
+<li class="breadcrumb-item active">{{game.course.name}}</li>
+<li class="breadcrumb-item active"><a href="{% url 'game_list' game.course.pk %}">Games</a></li>
+<li class="breadcrumb-item active">{{game.name}}</li>
+{% endblock %}
+
+{% block content %}
+<h6>Players:
+    {% for player in players_list %}
+    {{player}} &nbsp;
+    {% endfor %}
+    {% if game.status not in 'CTF' %}
+    <span>
+        <a onclick="clicked(event)" href="{% url 'terminate_game' game.pk %}" style="padding-left: 1em">
+            [terminate]
+        </a>
+    </span>
+    {% endif %}
+</h6>
+
+<br>
+
+<table class="table">
+    <thead class="thead-inverse">
+        <tr>
+            <th>round</th>
+            <th>role</th>
+            <th>order</th>
+            <th>inventory</th>
+            <th>backlog</th>
+            <th>client order</th>
+            <th>in transit 1</th>
+            <th>in transit 2</th>
+            <th>rpc ($)</th>
+            <th>tscc ($)</th>
+            <th>cumc ($)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for game_turn in game_turns %}
+        <tr>
+            <td class="align-middle">
+                {{ game_turn.round }}</a>
+            </td>
+
+            <td class="align-middle">
+                {{ game_turn.role }}</a>
+            </td>
+
+            <td class="align-middle">
+                {{ game_turn.value_played }}
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.inventory }}
+
+            </td>
+
+
+            <td class="align-middle">
+
+                {{ game_turn.backlog }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.order_client }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.received_product }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.to_receive }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.round_pos_cost }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.round_cost }}
+
+            </td>
+
+            <td class="align-middle">
+
+                {{ game_turn.cumulative_cost }}
+
+            </td>
+
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    function clicked(e) {
+        if (!confirm('Are you sure you want to terminate this game ?')) {
+            e.preventDefault();
+        }
+    }
+</script>
+{% endblock %}
