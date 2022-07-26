@@ -12,7 +12,14 @@
     {% for player in players_list %}
     {{player}} &nbsp;
     {% endfor %}
+
+    <span>
+        <a href="{% url 'terminate_game' game.pk %}" style="padding-left: 1em">
+            [terminate]
+        </a>
+    </span>
 </h6>
+
 <br>
 
 <table class="table">

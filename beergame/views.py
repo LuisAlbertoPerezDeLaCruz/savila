@@ -60,7 +60,7 @@ def game_list(request, course_pk):
         Q(player=request.user, game__status='C') |
         Q(player=request.user, game__status='S')).exists()
 
-    games = Game.objects.filter(course=course)
+    games = Game.objects.filter(course=course).exclude(status='T')
 
     for game in games:
         game.user_joined = GamePlayer.objects.filter(
@@ -344,3 +344,12 @@ def start_game(request, pk):
     messages.success(
         request, f'{game.name} started!')
     return redirect(f'/beergame/game/{game.pk}')
+
+
+def terminate_game(request, pk):
+    game = Game.objects.get(pk=pk)
+    game.status = 'T'
+    game.save()
+    messages.success(
+        request, f'{game.name} Terminated!')
+    return redirect(f'/beergame/game_list/{game.course.pk}/')
