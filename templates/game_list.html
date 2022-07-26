@@ -51,7 +51,7 @@
             <td class="align-middle">
                 {{ game.playerslist}}
                 {% if not user.is_instructor and not game.user_joined and not user_has_active_games %}
-                {% if game.status != 'S' %}
+                {% if game.status not in 'SFT' %}
                 <span>
                     <a href="{% url 'joinin_game' game.pk %}" style="padding-left: 1em">
                         [join in]
@@ -62,8 +62,8 @@
             </td>
 
             <td class="align-middle">
-                {% if game.result > -1 %}
-                {{game.result}}
+                {% if game.status == 'F' %}
+                {{game.final_result}}
                 {% endif %}
             </td>
 

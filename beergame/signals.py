@@ -80,10 +80,10 @@ def gameExtraInfoUpdate(go_ahead, instance):
 
             instance.game_player.game.next_play_by = next_player
 
-            rounds_played = instance.game_player.game.turns_played // 4
+            # rounds_played = instance.game_player.game.turns_played // 4
 
-            if rounds_played >= instance.game_player.game.max_turns:
-                instance.game_player.game.status = 'F'
+            # if rounds_played >= instance.game_player.game.max_turns:
+            #     instance.game_player.game.status = 'F'
 
             instance.game_player.game.save()
         else:

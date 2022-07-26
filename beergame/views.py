@@ -60,7 +60,8 @@ def game_list(request, course_pk):
         Q(player=request.user, game__status='C') |
         Q(player=request.user, game__status='S')).exists()
 
-    games = Game.objects.filter(course=course).exclude(status='T')
+    games = Game.objects.filter(course=course).exclude(
+        status='T').order_by('status', '-final_result')
 
     for game in games:
         game.user_joined = GamePlayer.objects.filter(
@@ -152,6 +153,7 @@ def game(request, pk):
         if rounds_played >= game_turn.game_player.game.max_turns:
             round_result = game_turn.round_result
             game.final_result = round_result[26]
+            game.status = 'F'
             game.save()
         game = game_turn.game_player.game
 
