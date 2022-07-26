@@ -14,7 +14,7 @@
     {% endfor %}
 
     <span>
-        <a href="{% url 'terminate_game' game.pk %}" style="padding-left: 1em">
+        <a onclick="clicked(event)" href="{% url 'terminate_game' game.pk %}" style="padding-left: 1em">
             [terminate]
         </a>
     </span>
@@ -108,4 +108,14 @@
     </tbody>
 </table>
 
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    function clicked(e) {
+        if (!confirm('Are you sure you want to terminate this game ?')) {
+            e.preventDefault();
+        }
+    }
+</script>
 {% endblock %}

@@ -35,7 +35,7 @@
     {% if game.status == 'C' %}
 
     <div class="mb-4">
-        <a href="{% url 'start_game' game.pk %}" class="btn btn-primary">Start game</a>
+        <a onclick="clicked(event)" href="{% url 'start_game' game.pk %}" class="btn btn-primary">Start game</a>
     </div>
 
     {% endif %}
@@ -121,4 +121,14 @@
     </tbody>
 </table>
 
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    function clicked(e) {
+        if (!confirm('Yoy dont have enough players to start the game. As an alternative we can add some robots to fill the absent players. Are you sure you want to start this game with robot players ?')) {
+            e.preventDefault();
+        }
+    }
+</script>
 {% endblock %}
