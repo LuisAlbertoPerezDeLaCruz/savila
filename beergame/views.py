@@ -55,13 +55,17 @@ def game_list(request, course_pk):
     course = Course.objects.get(pk=course_pk)
     institution = course.institution
     institutions = Institution.objects.all()
+
     user_has_active_games = GamePlayer.objects.filter(
-        Q(player=request.user, game__status='C') | Q(player=request.user, game__status='S')).exists()
+        Q(player=request.user, game__status='C') |
+        Q(player=request.user, game__status='S')).exists()
+
     games = Game.objects.filter(course=course)
 
     for game in games:
         game.user_joined = GamePlayer.objects.filter(
-            game=game, player=request.user).exists()
+            Q(game=game, player=request.user, game__status='C') |
+            Q(game=game, player=request.user, game__status='S')).exists()
 
     return render(request, 'game_list.html',
                   {"institutions": institutions,

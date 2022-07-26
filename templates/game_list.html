@@ -44,7 +44,7 @@
 
             <td class="align-middle">
                 {{ game.playerslist}}
-                {% if not user.is_instructor and not game.user_joined %}
+                {% if not user.is_instructor and not game.user_joined and not user_has_active_games %}
                 <span>
                     <a href="{% url 'joinin_game' game.pk %}" style="padding-left: 1em">
                         [join in]
