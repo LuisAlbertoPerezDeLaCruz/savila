@@ -198,7 +198,7 @@ def game(request, pk):
             game_turn.round_cost = round_result[result_data[pos][6]]
             game_turn.cumulative_cost = round_result[result_data[pos][7]]
 
-            view = 'game_instructor_view.html'
+        view = 'game_instructor_view.html'
     else:
         pos = -1
         for idx, player in enumerate(game_players):
