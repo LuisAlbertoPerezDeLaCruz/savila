@@ -268,6 +268,8 @@ def game_finished(request, pk):
         game_player__game=pk).order_by('turn')
 
     list_result = list()
+    total_result = 0
+
     for idx, game_turn in enumerate(game_turns):
         changed_round = (idx+1) % 4 == 0
         if changed_round:
@@ -295,6 +297,8 @@ def game_finished(request, pk):
             # Acumulator
             list_row.append(round_result[26])  # Backlog
 
+            total_result += round_result[25]
+
             list_result.append(list_row)
 
     view = 'game_finished_view.html'
@@ -304,7 +308,8 @@ def game_finished(request, pk):
                                   "players_list": players_list,
                                   "institution": institution,
                                   "institutions": institutions,
-                                  "list_result": list_result})
+                                  "list_result": list_result,
+                                  "total_result": total_result})
 
 
 def pos_description(pos):
