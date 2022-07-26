@@ -12,111 +12,44 @@
     {% for player in players_list %}
     {{player}} &nbsp;
     {% endfor %}
-    {% if game.status not in 'CTF' %}
-    <span>
-        <a onclick="clicked(event)" href="{% url 'terminate_game' game.pk %}" style="padding-left: 1em">
-            [terminate]
-        </a>
-    </span>
-    {% endif %}
 </h6>
 
 <br>
 
 <table class="table">
-    <thead class="thead-inverse">
-        <tr>
-            <th>round</th>
-            <th>role</th>
-            <th>order</th>
-            <th>inventory</th>
-            <th>backlog</th>
-            <th>client order</th>
-            <th>in transit 1</th>
-            <th>in transit 2</th>
-            <th>rpc ($)</th>
-            <th>tscc ($)</th>
-            <th>cumc ($)</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for game_turn in game_turns %}
-        <tr>
-            <td class="align-middle">
-                {{ game_turn.round }}</a>
-            </td>
-
-            <td class="align-middle">
-                {{ game_turn.role }}</a>
-            </td>
-
-            <td class="align-middle">
-                {{ game_turn.value_played }}
-            </td>
-
-            <td class="align-middle">
-
-                {{ game_turn.inventory }}
-
-            </td>
-
-
-            <td class="align-middle">
-
-                {{ game_turn.backlog }}
-
-            </td>
-
-            <td class="align-middle">
-
-                {{ game_turn.order_client }}
-
-            </td>
-
-            <td class="align-middle">
-
-                {{ game_turn.received_product }}
-
-            </td>
-
-            <td class="align-middle">
-
-                {{ game_turn.to_receive }}
-
-            </td>
-
-            <td class="align-middle">
-
-                {{ game_turn.round_pos_cost }}
-
-            </td>
-
-            <td class="align-middle">
-
-                {{ game_turn.round_cost }}
-
-            </td>
-
-            <td class="align-middle">
-
-                {{ game_turn.cumulative_cost }}
-
-            </td>
-
-        </tr>
+    <tr>
+        <td rowspan="2"></td>
+        <th colspan="2" scope="colgroup" style="text-align: center">Retailer</th>
+        <th colspan="2" scope="colgroup" style="text-align: center">Wholesaler</th>
+        <th colspan="2" scope="colgroup" style="text-align: center">Distributor</th>
+        <th colspan="2" scope="colgroup" style="text-align: center">Manufacturer</th>
+        <th colspan="1" scope="colgroup" style="text-align: center"></th>
+    </tr>
+    <tr>
+        <th scope="col">Inventory</th>
+        <th scope="col">Backlock</th>
+        <th scope="col">Inventory</th>
+        <th scope="col">Backlock</th>
+        <th scope="col">Inventory</th>
+        <th scope="col">Backlock</th>
+        <th scope="col">Inventory</th>
+        <th scope="col">Backlock</th>
+        <th scope="col">Acum</th>
+    </tr>
+    {% for rnd in list_result %}
+    <tr>
+        {% for col in rnd %}
+        {% if forloop.counter > 1 %}
+        <td>{{ col }}</td>
+        {% else %}
+        <th scope="row">Round {{ col }}</th>
+        {% endif %}
         {% endfor %}
-
-    </tbody>
+    </tr>
+    {% endfor %}
 </table>
 
 {% endblock %}
 
 {% block javascript %}
-<script type="text/javascript">
-    function clicked(e) {
-        if (!confirm('Are you sure you want to terminate this game ?')) {
-            e.preventDefault();
-        }
-    }
-</script>
 {% endblock %}
