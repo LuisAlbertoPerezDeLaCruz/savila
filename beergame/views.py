@@ -310,13 +310,21 @@ def game_finished(request, pk):
 
     view = 'game_finished_view.html'
 
+    categories = [1, 2, 3]
+    survived = [200, 119, 181]
+    not_survived = [123, 158, 528]
+
     return render(request, view, {"game": game,
                                   "players": players,
                                   "players_list": players_list,
                                   "institution": institution,
                                   "institutions": institutions,
                                   "list_result": list_result,
-                                  "total_result": total_result})
+                                  "total_result": total_result,
+                                  "categories": categories,
+                                  "survived": survived,
+                                  "not_survived": not_survived,
+                                  })
 
 
 def inventory_chart(request, pk):
@@ -333,6 +341,7 @@ def inventory_chart(request, pk):
     return JsonResponse(data={
         'labels': label,
         'data': data,
+        'mylabel': 'Inventory',
     })
 
 

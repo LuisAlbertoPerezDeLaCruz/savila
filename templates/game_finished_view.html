@@ -1,103 +1,123 @@
-{% extends 'base.html' %}
-
-{% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{% url 'home' institution.pk %}">Courses</a></li>
+{% extends 'base.html' %} {% block breadcrumb %}
+<li class="breadcrumb-item">
+  <a href="{% url 'home' institution.pk %}">Courses</a>
+</li>
 <li class="breadcrumb-item active">{{game.course.name}}</li>
-<li class="breadcrumb-item active"><a href="{% url 'game_list' game.course.pk %}">Games</a></li>
+<li class="breadcrumb-item active">
+  <a href="{% url 'game_list' game.course.pk %}">Games</a>
+</li>
 <li class="breadcrumb-item active">{{game.name}}</li>
-{% endblock %}
-
-{% block content %}
-<h6>Players:
-    {% for player in players_list %}
-    {{player}} &nbsp;
-    {% endfor %}
+{% endblock %} {% block content %}
+<h6>
+  Players: {% for player in players_list %} {{player}} &nbsp; {% endfor %}
 </h6>
-<br>
-<h5>
-    The Total Supply Chain Cost is: {{ total_result }}
-</h5>
+<br />
+<h5>The Total Supply Chain Cost is: {{ total_result }}</h5>
 
-<div id="container" style="width: 75%;">
-    <canvas id="inventory-chart" data-url="{% url 'inventory-chart' game.pk %}"></canvas>
-</div>
+<!-- <div id="container" style="width: 75%">
+  <canvas
+    id="inventory-chart"
+    data-url="{% url 'inventory-chart' game.pk %}"
+  ></canvas>
+</div> -->
 
-<br>
+<div id="container"></div>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+
+<br />
 
 <table class="table">
-    <tr>
-        <td rowspan="2"></td>
-        <th colspan="2" scope="colgroup" style="text-align: center">Retailer</th>
-        <th colspan="2" scope="colgroup" style="text-align: center">Wholesaler</th>
-        <th colspan="2" scope="colgroup" style="text-align: center">Distributor</th>
-        <th colspan="2" scope="colgroup" style="text-align: center">Manufacturer</th>
-        <th colspan="1" scope="colgroup" style="text-align: center"></th>
-    </tr>
-    <tr>
-        <th scope="col">Inventory</th>
-        <th scope="col">Backlock</th>
-        <th scope="col">Inventory</th>
-        <th scope="col">Backlock</th>
-        <th scope="col">Inventory</th>
-        <th scope="col">Backlock</th>
-        <th scope="col">Inventory</th>
-        <th scope="col">Backlock</th>
-        <th scope="col">Acum</th>
-    </tr>
-    {% for rnd in list_result %}
-    <tr>
-        {% for col in rnd %}
-        {% if forloop.counter > 1 %}
-        <td>{{ col }}</td>
-        {% else %}
-        <th scope="row">Round {{ col }}</th>
-        {% endif %}
-        {% endfor %}
-    </tr>
-    {% endfor %}
+  <tr>
+    <td rowspan="2"></td>
+    <th colspan="2" scope="colgroup" style="text-align: center">Retailer</th>
+    <th colspan="2" scope="colgroup" style="text-align: center">Wholesaler</th>
+    <th colspan="2" scope="colgroup" style="text-align: center">Distributor</th>
+    <th colspan="2" scope="colgroup" style="text-align: center">
+      Manufacturer
+    </th>
+    <th colspan="1" scope="colgroup" style="text-align: center"></th>
+  </tr>
+  <tr>
+    <th scope="col">Inventory</th>
+    <th scope="col">Backlock</th>
+    <th scope="col">Inventory</th>
+    <th scope="col">Backlock</th>
+    <th scope="col">Inventory</th>
+    <th scope="col">Backlock</th>
+    <th scope="col">Inventory</th>
+    <th scope="col">Backlock</th>
+    <th scope="col">Acum</th>
+  </tr>
+  {% for rnd in list_result %}
+  <tr>
+    {% for col in rnd %} {% if forloop.counter > 1 %}
+    <td>{{ col }}</td>
+    {% else %}
+    <th scope="row">Round {{ col }}</th>
+    {% endif %} {% endfor %}
+  </tr>
+  {% endfor %}
 </table>
+{% endblock %} {% block javascript %}
 
-{% endblock %}
-
-{% block javascript %}
-
-<script>
-
-    $(function () {
-
-        var $inventoryChart = $("#inventory-chart");
-        $.ajax({
-            url: $inventoryChart.data("url"),
-            success: function (data) {
-
-                var ctx = $inventoryChart[0].getContext("2d");
-
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: 'Inventory',
-                            backgroundColor: 'lightblue',
-                            data: data.data
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Retailer Inventory Chart',
-                        }
-                    }
-                });
-
-            }
+<script type="text/javascript">
+  $(function () {
+    var $inventoryChart = $("#inventory-chart");
+    $.ajax({
+      url: $inventoryChart.data("url"),
+      success: function (data) {
+        var ctx = $inventoryChart[0].getContext("2d");
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: data.labels,
+            datasets: [
+              {
+                label: data.mylabel,
+                backgroundColor: "lightblue",
+                data: data.data,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            legend: {
+              position: "top",
+            },
+            title: {
+              display: true,
+              text: "Retailer Inventory Chart",
+            },
+          },
         });
-
+      },
     });
+  });
+</script>
 
+<script type="text/javascript">
+  Highcharts.chart("container", {
+    chart: {
+      type: "column",
+    },
+    title: {
+      text: "Titanic Survivors by Ticket Class",
+    },
+    xAxis: {
+      categories: {{ categories }},
+    },
+    series: [
+      {
+        name: "Survived",
+        data: {{ survived }},
+        color: "green",
+      },
+      {
+        name: "Not survived",
+        data: {{ not_survived }},
+        color: "red",
+      },
+    ],
+  });
 </script>
 {% endblock %}
