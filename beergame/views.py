@@ -319,6 +319,23 @@ def game_finished(request, pk):
                                   "total_result": total_result})
 
 
+def inventory_chart(request, pk):
+    game = Game.objects.get(pk=pk)
+    label = ['w-'+str(i+1) for i in range(game.max_turns)]
+    data = list()
+    game_turns = GameTurn.objects.filter(
+        game_player__game=pk).order_by('turn')
+    for idx, game_turn in enumerate(game_turns):
+        changed_round = (idx+1) % 4 == 0
+        if changed_round:
+            round_result = json.loads(game_turn.round_result)
+            data.append(round_result[1])
+    return JsonResponse(data={
+        'labels': label,
+        'data': data,
+    })
+
+
 def pos_description(pos):
     descriptions = (
         "retailer",

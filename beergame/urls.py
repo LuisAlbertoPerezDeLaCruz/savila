@@ -24,4 +24,6 @@ urlpatterns = [
          beergame_views.terminate_game, name='terminate_game'),
     path('ajax/get_token_for_refresh/',
          beergame_views.get_token_for_refresh, name='get_token_for_refresh'),
+    path('inventory-chart/<int:pk>/', beergame_views.inventory_chart,
+         name='inventory-chart'),
 ]

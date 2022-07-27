@@ -18,6 +18,10 @@
     The Total Supply Chain Cost is: {{ total_result }}
 </h5>
 
+<div id="container" style="width: 75%;">
+    <canvas id="inventory-chart" data-url="{% url 'inventory-chart' game.pk %}"></canvas>
+</div>
+
 <br>
 
 <table class="table">
@@ -56,4 +60,44 @@
 {% endblock %}
 
 {% block javascript %}
+
+<script>
+
+    $(function () {
+
+        var $inventoryChart = $("#inventory-chart");
+        $.ajax({
+            url: $inventoryChart.data("url"),
+            success: function (data) {
+
+                var ctx = $inventoryChart[0].getContext("2d");
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Inventory',
+                            backgroundColor: 'lightblue',
+                            data: data.data
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Retailer Inventory Chart',
+                        }
+                    }
+                });
+
+            }
+        });
+
+    });
+
+</script>
 {% endblock %}
