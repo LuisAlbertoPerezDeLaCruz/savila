@@ -277,6 +277,12 @@ def game_finished(request, pk):
     list_result = list()
     total_result = 0
 
+    # Retailer Graph Data
+    gph_rounds = list()
+    gph_inventory_retailer = list()
+    gph_backlog_retailer = list()
+    gph_client_demand_retailer = list()
+
     for idx, game_turn in enumerate(game_turns):
         changed_round = (idx+1) % 4 == 0
         if changed_round:
@@ -284,10 +290,16 @@ def game_finished(request, pk):
             round_result = json.loads(game_turn.round_result)
 
             list_row.append(game_turn.round)
+            gph_rounds.append(game_turn.round)
 
             # retailer data
             list_row.append(round_result[1])  # Inventory
             list_row.append(round_result[13])  # Backlog
+
+            # retailer graph data
+            gph_inventory_retailer.append(round_result[1])
+            gph_backlog_retailer.append(round_result[13])
+            gph_client_demand_retailer.append(round_result[0])
 
             # wholesaler data
             list_row.append(round_result[4])  # Inventory
@@ -310,10 +322,6 @@ def game_finished(request, pk):
 
     view = 'game_finished_view.html'
 
-    categories = [1, 2, 3]
-    survived = [200, 119, 181]
-    not_survived = [123, 158, 528]
-
     return render(request, view, {"game": game,
                                   "players": players,
                                   "players_list": players_list,
@@ -321,9 +329,10 @@ def game_finished(request, pk):
                                   "institutions": institutions,
                                   "list_result": list_result,
                                   "total_result": total_result,
-                                  "categories": categories,
-                                  "survived": survived,
-                                  "not_survived": not_survived,
+                                  "gph_rounds": gph_rounds,
+                                  "gph_inventory_retailer": gph_inventory_retailer,
+                                  "gph_backlog_retailer": gph_backlog_retailer,
+                                  "gph_client_demand_retailer": gph_client_demand_retailer,
                                   })
 
 

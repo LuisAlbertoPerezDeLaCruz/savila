@@ -12,17 +12,9 @@
   Players: {% for player in players_list %} {{player}} &nbsp; {% endfor %}
 </h6>
 <br />
-<h5>The Total Supply Chain Cost is: {{ total_result }}</h5>
+<h5>The Total Supply Chain Cost is: ${{ total_result }}</h5>
 
-<!-- <div id="container" style="width: 75%">
-  <canvas
-    id="inventory-chart"
-    data-url="{% url 'inventory-chart' game.pk %}"
-  ></canvas>
-</div> -->
-
-<div id="container"></div>
-<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<div id="retailer_graph"></div>
 
 <br />
 
@@ -61,61 +53,31 @@
 {% endblock %} {% block javascript %}
 
 <script type="text/javascript">
-  $(function () {
-    var $inventoryChart = $("#inventory-chart");
-    $.ajax({
-      url: $inventoryChart.data("url"),
-      success: function (data) {
-        var ctx = $inventoryChart[0].getContext("2d");
-        new Chart(ctx, {
-          type: "line",
-          data: {
-            labels: data.labels,
-            datasets: [
-              {
-                label: data.mylabel,
-                backgroundColor: "lightblue",
-                data: data.data,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            legend: {
-              position: "top",
-            },
-            title: {
-              display: true,
-              text: "Retailer Inventory Chart",
-            },
-          },
-        });
-      },
-    });
-  });
-</script>
-
-<script type="text/javascript">
-  Highcharts.chart("container", {
+  Highcharts.chart("retailer_graph", {
     chart: {
-      type: "column",
+      type: "line",
     },
     title: {
-      text: "Titanic Survivors by Ticket Class",
+      text: "Retailer",
     },
     xAxis: {
-      categories: {{ categories }},
+      categories: {{ gph_rounds }},
     },
     series: [
       {
-        name: "Survived",
-        data: {{ survived }},
-        color: "green",
+        name: "Inventory",
+        data: {{ gph_inventory_retailer }},
+        // color: "lightblue",
       },
       {
-        name: "Not survived",
-        data: {{ not_survived }},
-        color: "red",
+        name: "Backlog",
+        data: {{ gph_backlog_retailer }},
+        // color: "pink",
+      },
+      {
+        name: "Client Demand",
+        data: {{ gph_client_demand_retailer }},
+        // color: "lightgreen",
       },
     ],
   });
