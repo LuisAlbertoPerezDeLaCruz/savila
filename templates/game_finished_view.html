@@ -15,7 +15,23 @@
 <h5>The Total Supply Chain Cost is: ${{ total_result }}</h5>
 
 <div id="retailer_graph"></div>
-
+<br />
+<hr />
+<br />
+<div id="wholesaler_graph"></div>
+<br />
+<hr />
+<br />
+<div id="distributor_graph"></div>
+<br />
+<hr />
+<br />
+<div id="manufacturer_graph"></div>
+<br />
+<hr />
+<br />
+<div id="cost_graph"></div>
+<br />
 <br />
 
 <table class="table">
@@ -82,4 +98,162 @@
     ],
   });
 </script>
+
+<script type="text/javascript">
+  Highcharts.chart("wholesaler_graph", {
+    chart: {
+      type: "line",
+    },
+    title: {
+      text: "Wholesaler",
+    },
+    xAxis: {
+      categories: {{ gph_rounds }},
+    },
+    series: [
+      {
+        name: "Inventory",
+        data: {{ gph_inventory_wholesaler }},
+        // color: "lightblue",
+      },
+      {
+        name: "Backlog",
+        data: {{ gph_backlog_wholesaler }},
+        // color: "pink",
+      },
+      {
+        name: "Client Demand",
+        data: {{ gph_client_demand_wholesaler }},
+        // color: "lightgreen",
+      },
+    ],
+  });
+</script>
+
+<script type="text/javascript">
+  Highcharts.chart("distributor_graph", {
+    chart: {
+      type: "line",
+    },
+    title: {
+      text: "distributor",
+    },
+    xAxis: {
+      categories: {{ gph_rounds }},
+    },
+    series: [
+      {
+        name: "Inventory",
+        data: {{ gph_inventory_distributor }},
+        // color: "lightblue",
+      },
+      {
+        name: "Backlog",
+        data: {{ gph_backlog_distributor }},
+        // color: "pink",
+      },
+      {
+        name: "Client Demand",
+        data: {{ gph_client_demand_distributor }},
+        // color: "lightgreen",
+      },
+    ],
+  });
+</script>
+
+<script type="text/javascript">
+  Highcharts.chart("manufacturer_graph", {
+    chart: {
+      type: "line",
+    },
+    title: {
+      text: "manufacturer",
+    },
+    xAxis: {
+      categories: {{ gph_rounds }},
+    },
+    series: [
+      {
+        name: "Inventory",
+        data: {{ gph_inventory_manufacturer }},
+        // color: "lightblue",
+      },
+      {
+        name: "Backlog",
+        data: {{ gph_backlog_manufacturer }},
+        // color: "pink",
+      },
+      {
+        name: "Client Demand",
+        data: {{ gph_client_demand_manufacturer }},
+        // color: "lightgreen",
+      },
+    ],
+  });
+</script>
+
+<script type="text/javascript">
+  Highcharts.chart("cost_graph", {
+    chart: {
+      type: "area",
+    },
+    title: {
+      text: "Cummulative Cost",
+    },
+    subtitle: {
+      text: "by supply chain position",
+    },
+    xAxis: {
+      categories: {{ gph_rounds }},
+      tickmarkPlacement: "on",
+      title: {
+        enabled: false,
+      },
+    },
+    yAxis: {
+      title: {
+        text: "cost($)",
+      },
+      labels: {
+        formatter: function () {
+          return this.value / 1;
+        },
+      },
+    },
+    tooltip: {
+      split: true,
+      valueSuffix: " $",
+    },
+    plotOptions: {
+      area: {
+        stacking: "normal",
+        lineColor: "#666666",
+        lineWidth: 1,
+        marker: {
+          lineWidth: 1,
+          lineColor: "#666666",
+        },
+      },
+    },
+    series: [
+      {
+        name: "Retailer",
+        data: {{ gph_cost_retailer }},
+      },
+      {
+        name: "Wholesaler",
+        data: {{ gph_cost_wholesaler }},
+      },
+      {
+        name: "Distributor",
+        data: {{ gph_cost_distributor }},
+      },
+      {
+        name: "Manufacturer",
+        data: {{ gph_cost_manufacturer }},
+      },
+    ],
+  });
+</script>
+
 {% endblock %}
