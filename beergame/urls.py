@@ -3,6 +3,7 @@ from beergame import views as beergame_views
 
 urlpatterns = [
     path('', beergame_views.home, name='home'),
+    path('about', beergame_views.about, name='about'),
     path('home', beergame_views.home, name='home'),
     path('home/<int:institution_pk>/', beergame_views.home, name='home'),
     path('new_game/<int:course_pk>/',

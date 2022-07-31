@@ -15,6 +15,14 @@ import json
 import numpy as np
 
 
+def about(request):
+    institution = Institution.objects.get(name='Global')
+    institutions = Institution.objects.all()
+    return render(request, 'about.html', {"institution": institution,
+                                          "institutions": institutions,
+                                          })
+
+
 def home(request, institution_pk=None):
 
     if request.user.is_anonymous:
