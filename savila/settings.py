@@ -151,6 +151,7 @@ AUTH_USER_MODEL = "accounts.User"
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'home'
 
+CSRF_TRUSTED_ORIGINS = ['https://savilagames.com']
 
 EMAIL_HOST = config("EMAIL_HOST", default="")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
