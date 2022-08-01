@@ -117,7 +117,7 @@ def new_course(request, institution_pk):
             courses = Course.objects.filter(instructor=request.user)
             return redirect(f'/beergame/home/{institution.pk}/')
     else:
-        form = NewGameForm()
+        form = NewCourseForm()
     return render(request,  'new_course.html',
                   {"institution": institution, "institutions": institutions, 'form': form})
 
