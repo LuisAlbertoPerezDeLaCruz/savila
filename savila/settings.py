@@ -160,7 +160,7 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default="tm/p-messages")
 
-# EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_BACKEND = config('EMAIL_BACKEND')
 
 LOGIN_URL = 'login'
 
