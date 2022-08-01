@@ -19,6 +19,10 @@ from django.contrib.messages import constants as messages
 
 import dj_database_url
 
+APP_NAME = "Savila"
+APP_REGISTER_EMAIL = "support.savilagames@savilagames.com"
+APP_ADMINISTRATOR_EMAIL = "admin@savilagames.com"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -159,8 +163,13 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default="tm/p-messages")
+EMAIL_BACKEND = config(
+    "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+)
+DEFAULT_FROM_EMAIL = config(
+    "DEFAULT_FROM_EMAIL", default=f"{APP_NAME} <{APP_REGISTER_EMAIL}>"
+)
 
-EMAIL_BACKEND = config('EMAIL_BACKEND')
 
 LOGIN_URL = 'login'
 
