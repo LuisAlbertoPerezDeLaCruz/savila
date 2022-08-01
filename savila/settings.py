@@ -151,7 +151,15 @@ AUTH_USER_MODEL = "accounts.User"
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'home'
 
-EMAIL_BACKEND = config('EMAIL_BACKEND')
+
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default="tm/p-messages")
+
+# EMAIL_BACKEND = config('EMAIL_BACKEND')
 
 LOGIN_URL = 'login'
 
