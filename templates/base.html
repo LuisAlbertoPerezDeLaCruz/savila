@@ -16,7 +16,17 @@
     <link rel="stylesheet" href="{% static 'css/app.css' %}" />
     {% block stylesheet %}{% endblock %}
   </head>
-
+  <style>
+    footer {
+      background-color: #212529;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 40px;
+      color: lightgray;
+      padding-top: 10px;
+    }
+  </style>
   <body>
     {% block body %}
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
@@ -154,4 +164,10 @@
     </script>
     {% block javascript %}{% endblock %}
   </body>
+
+  <footer class="page-footer font-small white">
+    <div class="text-center" style="font-size: 14px">
+      Contact: support.savilagames@savilagames.com
+    </div>
+  </footer>
 </html>
