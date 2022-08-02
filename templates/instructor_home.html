@@ -1,42 +1,40 @@
-{% extends 'base.html' %}
-
-{% block breadcrumb %}
+{% extends 'base.html' %} {% block breadcrumb %}
 <li class="breadcrumb-item active">Courses</li>
-{% endblock %}
-
-{% block content %}
-
+{% endblock %} {% block content %} {% if not institution.is_global %}
 <div class="mb-4">
-    <a href="{% url 'new_course' institution.pk %}" class="btn btn-primary">New course</a>
+  <a href="{% url 'new_course' institution.pk %}" class="btn btn-primary"
+    >New course</a
+  >
 </div>
+{% endif %}
 
 <table class="table">
-    <thead class="thead-inverse">
-        <tr>
-            <th>Course</th>
-            <th>Status</th>
-            <th>Students</th>
-            <th>Games</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for course in courses %}
-        <tr>
-            <td>
-                {{ course.name }}
-            </td>
+  <thead class="thead-inverse">
+    <tr>
+      <th>Course</th>
+      <th>Status</th>
+      <th>Students</th>
+      <th>Games</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in courses %}
+    <tr>
+      <td>{{ course.name }}</td>
 
-            <td class="align-middle">{{ course.get_status_display }}</td>
+      <td class="align-middle">{{ course.get_status_display }}</td>
 
-            <td class="align-middle">
-                <a href="{% url 'course_student_list' course.pk %}">{{ course.students.count }}</a>
-            </td>
+      <td class="align-middle">
+        <a href="{% url 'course_student_list' course.pk %}"
+          >{{ course.students.count }}</a
+        >
+      </td>
 
-            <td class="align-middle">
-                <a href="{% url 'game_list' course.pk %}">{{ course.games.count }}</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+      <td class="align-middle">
+        <a href="{% url 'game_list' course.pk %}">{{ course.games.count }}</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% endblock %}
