@@ -26,7 +26,7 @@
     <tbody>
         {% for game in games %}
         <tr>
-            {% if game.user_joined or request.user.is_instructor %}
+            {% if game.user_joined or request.user.is_instructor  or game.status == 'F' %}
             <td>
                 <a href="{% url 'game' game.pk %}">{{ game.name }}</a>
             </td>
