@@ -163,9 +163,9 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
 EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default="tm/p-messages")
-EMAIL_BACKEND = config(
-    "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
-)
+# EMAIL_BACKEND = config(
+#     "EMAIL_BACKEND", default="django.core.mail.backends.console.EmailBackend"
+# )
 DEFAULT_FROM_EMAIL = config(
     "DEFAULT_FROM_EMAIL", default=f"{APP_NAME} <{APP_REGISTER_EMAIL}>"
 )
