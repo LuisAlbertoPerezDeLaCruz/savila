@@ -14,16 +14,19 @@
     {% endfor %}
 </h6>
     {% if game.status == 'S' %}
-    <h6>
-        Now playing: 
-        <button disabled type="button" class="btn btn-success mb-1"><span >{{game.next_play_by.username}}</span> </button>       
-        <span style="margin-left:1em">Round:</span>     
-        <button disabled type="button" class="btn btn-success mb-1"> <span>{{game.current_round}}/{{game.max_turns}}</span></button>       
-    </h6>
+        {% if game.current_round <= game.max_turns %}
+        <h6>
+            Now playing: 
+            <button disabled type="button" class="btn btn-success mb-1"><span >{{game.next_play_by.username}}</span> </button>       
+            <span style="margin-left:1em">Round:</span>     
+            <button disabled type="button" class="btn btn-success mb-1"> <span>{{game.current_round}}/{{game.max_turns}}</span></button>       
+        </h6>
+        {% endif %}
     {% endif %}
 <div>
     {% if game.next_play_by.username == request.user.username %}
     {% if game.status == 'S' %}
+    {% if game.current_round <= game.max_turns %}
     <h6>
         <form class="row g-2" method="post">
             {% csrf_token %}
@@ -38,12 +41,19 @@
     </h6>
     {% endif %}
     {% endif %}
+    {% endif %}
 
     {% if game.created_by.username == request.user.username %}
     {% if game.status == 'C' %}
 
+
+
     <div class="mb-4">
-        <a onclick="clicked(event)" href="{% url 'start_game' game.pk %}" class="btn btn-primary">Start game</a>
+        {% if game.players.count < 4 %}
+            <a onclick="clicked(event)" href="{% url 'start_game' game.pk %}" class="btn btn-primary">Start game</a>
+        {% else %}
+            <a href="{% url 'start_game' game.pk %}" class="btn btn-primary">Start game</a>
+        {% endif %}
     </div>
 
     {% endif %}
@@ -67,7 +77,9 @@
             <li>
                 <b>cumc ($):</b> accumulated cost of the supply chain
             </li>
-        </ul>
+            <li>
+                <b>note:</b> every unit of inventory cost 5$ and every unit of backlog 25$
+            </li>
     </div>
     {% endif %}
 
