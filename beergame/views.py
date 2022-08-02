@@ -69,7 +69,7 @@ def game_list(request, course_pk):
         Q(player=request.user, game__status='S')).exists()
 
     games = Game.objects.filter(course=course).exclude(
-        status='T').order_by('status', '-final_result')
+        status='T').order_by('status', 'final_result')
 
     for game in games:
         game.user_joined = GamePlayer.objects.filter(

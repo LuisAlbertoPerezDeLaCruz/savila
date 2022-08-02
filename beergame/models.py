@@ -113,6 +113,9 @@ class Game(models.Model):
             players_str += f'{rel.player.username} '
         return players_str
 
+    def current_round(self):
+        return self.turns_played//4 + 1
+
     def save(self,  *args, **kwargs):
         if self.pk == None:
             self.next_play_by = self.created_by
