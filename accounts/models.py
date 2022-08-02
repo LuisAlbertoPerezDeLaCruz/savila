@@ -3,6 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
+    is_plugged = models.BooleanField(default=False)
     is_instructor = models.BooleanField(default=False)
     is_bot = models.BooleanField(verbose_name='robot', default=False)
 

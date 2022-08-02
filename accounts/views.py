@@ -43,3 +43,9 @@ class UserUpdateView(UpdateView):
 
     def get_object(self):
         return self.request.user
+
+@login_required
+def change_role(request):
+    request.user.is_instructor = not request.user.is_instructor
+    request.user.save()
+    return redirect(f'/beergame/home')

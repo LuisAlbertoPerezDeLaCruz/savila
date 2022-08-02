@@ -95,6 +95,17 @@
                 <a class="dropdown-item" href="{% url 'password_change' %}"
                   >Change password</a
                 >
+                {% if request.user.is_plugged %}
+                <a class="dropdown-item" href="{% url 'change_role' %}"
+                  >
+                  {% if request.user.is_instructor %}
+                    As Student
+                  {% else %}
+                    As Instructor
+                  {% endif %}
+                  </a
+                >
+                {% endif %}
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{% url 'logout' %}">Log out</a>
               </div>

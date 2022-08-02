@@ -38,6 +38,9 @@ urlpatterns = [
     path('settings/account/',
          accounts_views.UserUpdateView.as_view(), name='my_account'),
 
+    path('change_role/',
+         accounts_views.change_role, name='change_role'),
+
     #
     # auth reset password urls
     #
