@@ -290,15 +290,19 @@ def game_finished(request, pk):
     gph_inventory_retailer = list()
     gph_backlog_retailer = list()
     gph_client_demand_retailer = list()
+    gph_client_order_retailer = list()
     gph_inventory_wholesaler = list()
     gph_backlog_wholesaler = list()
     gph_client_demand_wholesaler = list()
+    gph_client_order_wholesaler = list()
     gph_inventory_distributor = list()
     gph_backlog_distributor = list()
     gph_client_demand_distributor = list()
+    gph_client_order_distributor = list()
     gph_inventory_manufacturer = list()
     gph_backlog_manufacturer = list()
     gph_client_demand_manufacturer = list()
+    gph_client_order_manufacturer = list()
     gph_cost_retailer = list()
     gph_cost_wholesaler = list()
     gph_cost_distributor = list()
@@ -325,6 +329,7 @@ def game_finished(request, pk):
             gph_inventory_retailer.append(round_result[1])
             gph_backlog_retailer.append(-round_result[13])
             gph_client_demand_retailer.append(round_result[0])
+            gph_client_order_retailer.append(round_result[17])
 
             # wholesaler data
             list_row.append(round_result[4])  # Inventory
@@ -334,6 +339,7 @@ def game_finished(request, pk):
             gph_inventory_wholesaler.append(round_result[4])
             gph_backlog_wholesaler.append(-round_result[14])
             gph_client_demand_wholesaler.append(round_result[17])
+            gph_client_order_wholesaler.append(round_result[18])
 
             # distributor data
             list_row.append(round_result[7])  # Inventory
@@ -343,6 +349,7 @@ def game_finished(request, pk):
             gph_inventory_distributor.append(round_result[7])
             gph_backlog_distributor.append(-round_result[15])
             gph_client_demand_distributor.append(round_result[18])
+            gph_client_order_distributor.append(round_result[19])
 
             # manufacturer data
             list_row.append(round_result[10])  # Inventory
@@ -352,6 +359,7 @@ def game_finished(request, pk):
             gph_inventory_manufacturer.append(round_result[10])
             gph_backlog_manufacturer.append(-round_result[16])
             gph_client_demand_manufacturer.append(round_result[19])
+            gph_client_order_manufacturer.append(round_result[20])
 
             # Acumulator
             list_row.append(round_result[26])  # Backlog
@@ -383,15 +391,19 @@ def game_finished(request, pk):
                                   "gph_inventory_retailer": gph_inventory_retailer,
                                   "gph_backlog_retailer": gph_backlog_retailer,
                                   "gph_client_demand_retailer": gph_client_demand_retailer,
+                                  "gph_client_order_retailer": gph_client_order_retailer,
                                   "gph_inventory_wholesaler": gph_inventory_wholesaler,
                                   "gph_backlog_wholesaler": gph_backlog_wholesaler,
                                   "gph_client_demand_wholesaler": gph_client_demand_wholesaler,
+                                  "gph_client_order_wholesaler": gph_client_order_wholesaler,
                                   "gph_inventory_distributor": gph_inventory_distributor,
                                   "gph_backlog_distributor": gph_backlog_distributor,
                                   "gph_client_demand_distributor": gph_client_demand_distributor,
+                                  "gph_client_order_distributor": gph_client_order_distributor,
                                   "gph_inventory_manufacturer": gph_inventory_manufacturer,
                                   "gph_backlog_manufacturer": gph_backlog_manufacturer,
                                   "gph_client_demand_manufacturer": gph_client_demand_manufacturer,
+                                  "gph_client_order_manufacturer": gph_client_order_manufacturer,
                                   "gph_cost_retailer": gph_cost_retailer,
                                   "gph_cost_wholesaler": gph_cost_wholesaler,
                                   "gph_cost_distributor": gph_cost_distributor,
