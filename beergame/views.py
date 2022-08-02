@@ -323,7 +323,7 @@ def game_finished(request, pk):
 
             # retailer graph data
             gph_inventory_retailer.append(round_result[1])
-            gph_backlog_retailer.append(round_result[13])
+            gph_backlog_retailer.append(-round_result[13])
             gph_client_demand_retailer.append(round_result[0])
 
             # wholesaler data
@@ -332,7 +332,7 @@ def game_finished(request, pk):
 
             # wholesaler graph data
             gph_inventory_wholesaler.append(round_result[4])
-            gph_backlog_wholesaler.append(round_result[14])
+            gph_backlog_wholesaler.append(-round_result[14])
             gph_client_demand_wholesaler.append(round_result[17])
 
             # distributor data
@@ -341,7 +341,7 @@ def game_finished(request, pk):
 
             # distributor graph data
             gph_inventory_distributor.append(round_result[7])
-            gph_backlog_distributor.append(round_result[15])
+            gph_backlog_distributor.append(-round_result[15])
             gph_client_demand_distributor.append(round_result[18])
 
             # manufacturer data
@@ -350,7 +350,7 @@ def game_finished(request, pk):
 
             # manufacturer graph data
             gph_inventory_manufacturer.append(round_result[10])
-            gph_backlog_manufacturer.append(round_result[16])
+            gph_backlog_manufacturer.append(-round_result[16])
             gph_client_demand_manufacturer.append(round_result[19])
 
             # Acumulator
