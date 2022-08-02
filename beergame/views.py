@@ -140,6 +140,9 @@ def new_game(request, course_pk):
                 game=game,
                 player=request.user
             )
+        else:
+            messages.warning(
+                request, f'game could not be created. Try another name!')
         return redirect(f'/beergame/game_list/{course.pk}/')
     else:
         form = NewGameForm()
